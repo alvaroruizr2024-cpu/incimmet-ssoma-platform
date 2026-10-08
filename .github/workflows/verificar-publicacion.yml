@@ -1,0 +1,29 @@
+name: Verificar publicación
+on:
+  workflow_dispatch:
+    inputs:
+      base:
+        description: URL base del sitio publicado
+        required: true
+        default: https://incimmet-ssoma-platform.vercel.app
+  deployment_status:
+permissions:
+  contents: read
+jobs:
+  publicacion:
+    # Manual, o al terminar con éxito un despliegue de producción (estado que publica Vercel).
+    if: >-
+      github.event_name == 'workflow_dispatch' ||
+      (github.event.deployment_status.state == 'success' &&
+      contains(github.event.deployment.environment, 'roduction'))
+    runs-on: ubuntu-latest
+    timeout-minutes: 6
+    env:
+      BASE_PUBLICADA: ${{ github.event.inputs.base || 'https://incimmet-ssoma-platform.vercel.app' }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Esperar la propagación del dominio de producción
+        if: github.event_name == 'deployment_status'
+        run: sleep 45
+      - name: Rutas, estados y cabeceras del sitio publicado
+        run: bash scripts/verificar-publicacion.sh "$BASE_PUBLICADA"

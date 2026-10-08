@@ -66,9 +66,13 @@ for (const route of appRoutes) {
   test(`móvil 390 px: ${route} sin desborde de página`, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 });
     await page.goto('/dashboard');
-    await page
-      .getByRole('combobox', { name: 'Rol de demostración', exact: true })
-      .selectOption(route === '/campo' ? 'Supervisor de campo' : 'SSOMA corporativo');
+    const selector = page.getByRole('combobox', { name: 'Rol de demostración', exact: true });
+    const rol = route === '/campo' ? 'Supervisor de campo' : 'SSOMA corporativo';
+    if ((await selector.inputValue()) !== rol) {
+      await selector.selectOption(rol);
+      // Elegir rol navega al inicio de ese rol; esperar a que termine evita interrumpir la siguiente navegación.
+      await page.waitForURL(route === '/campo' ? /\/campo/ : /\/analisis/);
+    }
     await page.goto(route);
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible();
     await page.waitForTimeout(500);
