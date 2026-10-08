@@ -143,6 +143,33 @@ test('presencia plena en pausa y nula lejos', () => {
   assert.equal(c.presenciaMomento(4, 0), 0);
 });
 test('acentos por escena', () => assert.equal(c.ACENTOS_ESCENA.length, c.ESCENAS.length));
+test('apertura termina en el encuadre', () =>
+  assert.deepEqual(c.aperturaCamara(c.APERTURA.duracion), {
+    retroceso: 0,
+    descenso: 0,
+    fovExtra: 0,
+    exposicion: 1,
+    terminada: true,
+  }));
+test('giro acotado', () =>
+  assert.deepEqual(c.giroDesdeArrastre({ yaw: 0, pitch: 0 }, -1e6, 1e6, 1000), {
+    yaw: c.GIRO.maxYaw,
+    pitch: c.GIRO.maxPitch,
+  }));
+test('recorrido termina', () => assert.equal(c.posicionRecorrido(1e6, 8).fin, true));
+test('anclas acotadas', () =>
+  assert.equal(
+    c.anclasVisibles(
+      Array.from({ length: 20 }, (_, i) => ({
+        clave: String(i),
+        x: 0.5,
+        y: 0.5,
+        profundidad: i / 20,
+        delante: true,
+      })),
+    ).length,
+    c.MAX_ANCLAS,
+  ));
 test('catálogo interactivo', () => {
   const cat = ix.catalogoInteractivo(s);
   assert.equal(cat.filter((d) => d.tipo === 'evento').length, 225);

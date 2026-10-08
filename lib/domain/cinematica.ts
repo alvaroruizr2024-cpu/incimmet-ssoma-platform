@@ -83,7 +83,7 @@ function faseTramo(progreso: number) {
     i = Math.floor(t),
     local = t - i;
   const fase = acotar((local - 0.2) / 0.62);
-  return { i, fase, suave: fase * fase * (3 - 2 * fase) };
+  return { i, local, fase, suave: fase * fase * (3 - 2 * fase) };
 }
 export function poseCamara(progreso: number): { posicion: Vec3; mirada: Vec3 } {
   const { i, suave } = faseTramo(progreso);
@@ -229,4 +229,202 @@ export function desplazamientoMirada(
 export const VELOCIDAD_REFERENCIA = 0.35;
 export function velocidadNarrativa(anterior: number, actual: number, segundos: number): number {
   return acotar(Math.abs(actual - anterior) / Math.max(segundos, 1 / 240) / VELOCIDAD_REFERENCIA);
+}
+
+const finito = (n: number, alternativa = 0) => (Number.isFinite(n) ? n : alternativa);
+
+/** Apertura: la cámara llega desde atrás y más baja mientras la exposición sube desde el negro. */
+export const APERTURA = { duracion: 2.6, retroceso: 3.4, descenso: 0.42, fovExtra: 9 } as const;
+export function aperturaCamara(segundos: number): {
+  retroceso: number;
+  descenso: number;
+  fovExtra: number;
+  exposicion: number;
+  terminada: boolean;
+} {
+  const t = acotar(finito(segundos) / APERTURA.duracion);
+  const s = t * t * t * (t * (t * 6 - 15) + 10);
+  const resto = 1 - s;
+  const e = acotar(t / 0.7);
+  return {
+    retroceso: APERTURA.retroceso * resto,
+    descenso: APERTURA.descenso * resto,
+    fovExtra: APERTURA.fovExtra * resto,
+    exposicion: 1 - (1 - e) * (1 - e),
+    terminada: t >= 1,
+  };
+}
+/** Respiración en reposo: deriva milimétrica de la posición y un balanceo imperceptible. */
+export const RESPIRACION = { x: 0.028, y: 0.02, giro: 0.0028 } as const;
+export function respiracionCamara(segundos: number): { x: number; y: number; giro: number } {
+  const t = finito(segundos);
+  return {
+    x: Math.sin(t * 0.37) * RESPIRACION.x,
+    y: Math.sin(t * 0.61 + 1.3) * RESPIRACION.y,
+    giro: Math.sin(t * 0.23) * RESPIRACION.giro,
+  };
+}
+/** Giro por arrastre (ratón o tacto): píxeles → radianes acotados; al soltar vuelve despacio al encuadre. */
+export const GIRO = { maxYaw: 0.62, maxPitch: 0.3, sensibilidad: 1.7, retorno: 0.9 } as const;
+export interface Giro {
+  yaw: number;
+  pitch: number;
+}
+export function giroDesdeArrastre(giro: Giro, dxPx: number, dyPx: number, anchoPx: number): Giro {
+  const ancho = Math.max(1, finito(anchoPx, 1));
+  const yaw = finito(giro.yaw) - (finito(dxPx) / ancho) * GIRO.sensibilidad;
+  const pitch = finito(giro.pitch) + (finito(dyPx) / ancho) * GIRO.sensibilidad;
+  return {
+    yaw: acotar(yaw, -GIRO.maxYaw, GIRO.maxYaw),
+    pitch: acotar(pitch, -GIRO.maxPitch, GIRO.maxPitch),
+  };
+}
+export function giroHaciaReposo(giro: Giro, segundos: number): Giro {
+  const k = Math.exp(-GIRO.retorno * Math.max(0, finito(segundos)));
+  return { yaw: finito(giro.yaw) * k, pitch: finito(giro.pitch) * k };
+}
+/** Realce de llegada 0–1: la luz de la escena se enciende un instante cuando la cámara se asienta. */
+export function realceLlegada(progreso: number): number {
+  const { local } = faseTramo(progreso);
+  const subida = acotar((local - 0.78) / 0.08);
+  const bajada = 1 - acotar((local - 0.86) / 0.12);
+  return subida * bajada;
+}
+/** Recorrido automático: viaje suave entre escenas y pausa de lectura; termina al asentarse en la última. */
+export const RECORRIDO = { viaje: 3.2, pausa: 4.4 } as const;
+export function posicionRecorrido(
+  segundos: number,
+  escenas: number,
+  inicio = 0,
+): { desde: number; hasta: number; mezcla: number; fin: boolean } {
+  const n = Math.max(1, Math.floor(finito(escenas, 1)));
+  const base = Math.min(n - 1, Math.max(0, Math.floor(finito(inicio))));
+  const t = Math.max(0, finito(segundos));
+  const ciclo = RECORRIDO.viaje + RECORRIDO.pausa;
+  const tramos = n - 1 - base;
+  const k = Math.floor(t / ciclo);
+  if (tramos <= 0 || k >= tramos) return { desde: n - 1, hasta: n - 1, mezcla: 1, fin: true };
+  const u = acotar((t - k * ciclo) / RECORRIDO.viaje);
+  return { desde: base + k, hasta: base + k + 1, mezcla: u * u * (3 - 2 * u), fin: false };
+}
+/** Anclas visibles: dentro del encuadre y delante de la cámara, las más cercanas primero, hasta un máximo. */
+export const MAX_ANCLAS = 10;
+export interface AnclaProyectada {
+  clave: string;
+  x: number;
+  y: number;
+  profundidad: number;
+  delante: boolean;
+}
+export function anclasVisibles(
+  anclas: readonly AnclaProyectada[],
+  max: number = MAX_ANCLAS,
+): AnclaProyectada[] {
+  const margen = 0.03;
+  return anclas
+    .filter(
+      (a) =>
+        a.delante &&
+        Number.isFinite(a.x) &&
+        Number.isFinite(a.y) &&
+        Number.isFinite(a.profundidad) &&
+        a.x >= -margen &&
+        a.x <= 1 + margen &&
+        a.y >= -margen &&
+        a.y <= 1 + margen,
+    )
+    .sort((a, b) => a.profundidad - b.profundidad)
+    .slice(0, Math.max(0, Math.floor(finito(max))));
+}
+/** Marcador de dato: pulso lento; más grande y nítido al señalarlo o fijarlo. */
+export function pulsoMarcador(
+  segundos: number,
+  indice: number,
+  nivel: number,
+): { escala: number; opacidad: number } {
+  const fase = Math.sin(finito(segundos) * 1.4 + finito(indice) * 0.9) * 0.5 + 0.5;
+  const n = acotar(nivel);
+  return { escala: 1 + fase * 0.18 + n * 0.35, opacidad: acotar(0.45 + fase * 0.25 + n * 0.3) };
+}
+/** Caja de un ancla DOM en píxeles de pantalla: el punto (x, y) y el tamaño del rótulo que cuelga de él. */
+export interface CajaAncla {
+  clave: string;
+  x: number;
+  y: number;
+  ancho: number;
+  alto: number;
+  /** Desplazamiento elegido en un frame anterior; se conserva mientras siga libre para evitar saltos. */
+  preferida?: number;
+}
+/** Desplazamientos candidatos en unidades de caja: en el punto, encima, debajo, a los lados y más arriba o abajo. */
+export const DESPLAZAMIENTOS_ANCLA: readonly (readonly [number, number])[] = [
+  [0, 0],
+  [0, -1],
+  [0, 1],
+  [-1, 0],
+  [1, 0],
+  [1, -1],
+  [1, 1],
+  [0, -2],
+  [0, 2],
+  [2, 0],
+];
+const SANGRIA_ANCLA = { x: 16, y: 18 } as const;
+/**
+ * Reparte los rótulos sin solaparse ni salir del encuadre: las cajas llegan ordenadas por cercanía y
+ * la más cercana conserva su sitio; un rótulo sin hueco libre no se muestra (su marcador 3D sigue visible).
+ */
+export interface CajaOcupada {
+  x: number;
+  y: number;
+  ancho: number;
+  alto: number;
+}
+export function distribuirAnclas(
+  cajas: readonly CajaAncla[],
+  anchoPantalla: number,
+  altoPantalla: number,
+  margen = 6,
+  ocupadas: readonly CajaOcupada[] = [],
+): Map<string, { x: number; y: number; opcion: number }> {
+  const colocadas: CajaOcupada[] = ocupadas.filter((c) =>
+    [c.x, c.y, c.ancho, c.alto].every(Number.isFinite),
+  );
+  const resultado = new Map<string, { x: number; y: number; opcion: number }>();
+  const ancho = Math.max(0, finito(anchoPantalla)),
+    alto = Math.max(0, finito(altoPantalla));
+  for (const caja of cajas) {
+    if (![caja.x, caja.y, caja.ancho, caja.alto].every(Number.isFinite)) continue;
+    const orden = [...DESPLAZAMIENTOS_ANCLA.keys()];
+    if (caja.preferida !== undefined && DESPLAZAMIENTOS_ANCLA[caja.preferida]) {
+      orden.splice(orden.indexOf(caja.preferida), 1);
+      orden.unshift(caja.preferida);
+    }
+    for (const opcion of orden) {
+      const [dx, dy] = DESPLAZAMIENTOS_ANCLA[opcion]!;
+      const x = caja.x + dx * (caja.ancho + margen),
+        y = caja.y + dy * (caja.alto + margen);
+      const izquierda = x - SANGRIA_ANCLA.x,
+        arriba = y - SANGRIA_ANCLA.y;
+      if (
+        izquierda < 0 ||
+        arriba < 0 ||
+        izquierda + caja.ancho > ancho ||
+        arriba + caja.alto > alto
+      )
+        continue;
+      const libre = colocadas.every(
+        (c) =>
+          izquierda + caja.ancho + margen <= c.x ||
+          c.x + c.ancho + margen <= izquierda ||
+          arriba + caja.alto + margen <= c.y ||
+          c.y + c.alto + margen <= arriba,
+      );
+      if (!libre) continue;
+      colocadas.push({ x: izquierda, y: arriba, ancho: caja.ancho, alto: caja.alto });
+      resultado.set(caja.clave, { x, y, opcion });
+      break;
+    }
+  }
+  return resultado;
 }

@@ -4,7 +4,7 @@ Entrega de rediseño · 07/10/2026 · Cinemática interactiva · 08/10/2026.
 
 Navegación institucional marino/azul con iconos; indicadores prioritarios; tarjetas, tablas y controles más legibles; versiones clara y oscura; vistas adaptadas a móvil. Se conservan la presentación minera, los datos documentales y los flujos locales.
 
-La presentación 3D incorpora óptica y mirada libre de cámara, instalaciones de datos que se ensamblan al acercarse y que se pueden señalar y fijar (con panel accesible, recorrido por teclado y enlaces a fichas y filtros de la plataforma), acento lumínico por escena y coreografía de lectura guiada por scroll. Sin dependencias nuevas y con los mismos fallbacks. Detalle, alcance y límites en docs/CINEMATICA_INTERACTIVA.md.
+La presentación 3D incorpora apertura cinematográfica (travelling de llegada y fundido desde negro), movimiento ambiental continuo en reposo (polvo, niebla, luminarias y respiración de cámara), óptica y mirada libre, arrastre para mirar con ratón o dedo, haz de luz que sigue la mano, instalaciones de datos que se ensamblan al acercarse con marcadores visibles y rótulos pulsables anclados a cada dato (panel accesible, recorrido por teclado y enlaces a fichas y filtros de la plataforma), recorrido automático con pausa, acento lumínico por escena y revelados por scroll también en 2D. Sin dependencias nuevas y con los mismos fallbacks. Detalle, alcance y límites en docs/CINEMATICA_INTERACTIVA.md.
 
 ## Ejecutar el paquete ya compilado
 
@@ -38,12 +38,14 @@ Se utiliza Babel con next/babel y una sola tarea de generación para compatibili
 
 ## Resultados y límites
 
-329 pruebas unitarias aprobadas (20 archivos). Build de producción y TypeScript aprobados; 239 páginas generadas. 27 pruebas en Chromium aprobadas y 1 omitida (GPU física). El recorrido 3D y su interacción se verificaron con WebGL por software; la prueba con GPU física sigue pendiente y no se garantiza funcionamiento universal al 100%. Las pruebas en navegador, la integridad del JSON y los controles de dependencias se documentan en el informe de entrega.
+337 pruebas unitarias aprobadas (20 archivos). Build de producción y TypeScript aprobados; 239 páginas generadas. 28 pruebas en Chromium aprobadas y 1 omitida (GPU física). El recorrido 3D y su interacción se verificaron con WebGL por software; la prueba con GPU física sigue pendiente y no se garantiza funcionamiento universal al 100%. Las pruebas en navegador, la integridad del JSON y los controles de dependencias se documentan en el informe de entrega.
 
 Es una demo documental: roles simulados, reportes y evidencias locales, sin autenticación operativa ni backend de transmisión. Los datos originales no se modificaron. Los cierres documentales y las coberturas parciales mantienen sus advertencias.
 
 ## Publicación
 
-Se registró un sitio privado en Sites. No está publicado: la revisión automática rechazó el envío de credenciales por stdin requerido para sincronizar el código con el alojamiento, porque esa operación exige una categoría de aprobación deshabilitada en la sesión. No se obtuvo una URL de despliegue exitoso. El paquete incluye el build completo para desplegarlo en un alojamiento estático compatible; no contiene credenciales.
+Sitio publicado en Vercel desde el repositorio GitHub `alvaroruizr2024-cpu/incimmet-ssoma-platform` (rama `main`, integración Git): https://incimmet-ssoma-platform.vercel.app. `vercel.json` fija el build (`npm run build`, webpack) y las cabeceras de seguridad equivalentes a `public/_headers`. La protección del proyecto es la estándar de Vercel: el dominio de producción es público y las URL de previsualización requieren iniciar sesión en Vercel.
+
+`scripts/verificar-publicacion.sh <URL>` comprueba estados HTTP, contenido y cabeceras de `/`, `/dashboard`, `/eventos/EV-…`, `/campo`, `/sw.js`, el manifiesto y la respuesta 404; el workflow «Verificar publicación» lo ejecuta a mano desde Actions o al terminar cada despliegue de producción. El paquete no contiene credenciales.
 
 Los documentos de pasos anteriores en docs son históricos. Este README y el informe de entrega describen la versión rediseñada; docs/CINEMATICA_INTERACTIVA.md describe la capa cinemática interactiva añadida el 08/10/2026.

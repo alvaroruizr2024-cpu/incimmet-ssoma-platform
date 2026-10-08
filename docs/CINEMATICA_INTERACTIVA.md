@@ -33,6 +33,19 @@ Base: entrega «Portal SSOMA mejorado» (07/10/2026). Alcance: más cinemática 
 - El canvas solo recibe el puntero con `(hover: hover) and (pointer: fine)`. En tacto no hay picking para no interferir con el desplazamiento del documento; el panel y su recorrido sí funcionan en tacto y teclado.
 - Tono sobrio: realces de contorno y luz, sin partículas nuevas ni efectos de videojuego; la baliza ámbar conserva su pulso leve y no destella.
 
+## Ampliación cinematográfica e interactiva (segunda iteración, 08/10/2026)
+
+Petición: la página debía percibirse claramente cinematográfica e interactiva en cualquier dispositivo. Criterios aplicados de los skills instalados: dirección de diseño «rediseño que preserva» con movimiento motivado (apertura, jerarquía, respuesta al gesto), sin estética de videojuego; y la guía de interfaz de Vercel (reducción de movimiento, animar solo `transform`/`opacity`, control de pausa para el movimiento automático, gestos con alternativa de pulsación y teclado, `touch-action` que conserva el desplazamiento y el zoom).
+
+- **Apertura** (`aperturaCamara`): la cámara llega desde 3,4 m atrás y 0,42 m más baja durante 2,6 s mientras la exposición sube desde el negro; el DOM funde desde negro y escalona el titular. Sin JavaScript o con movimiento reducido la página termina igualmente visible.
+- **Latido ambiental**: en reposo el canvas sigue en `demand`, pero un reloj invalida 30 frames por segundo (24 en calidad baja) para mantener polvo, niebla, tres luminarias que titilan y una respiración de cámara milimétrica (`respiracionCamara`). El monitor de rendimiento sigue midiendo solo en ventanas de movimiento.
+- **Arrastre para mirar** (`giroDesdeArrastre`, `giroHaciaReposo`): con ratón o dedo, el arrastre gira la mirada hasta ±0,62 rad en horizontal y ±0,3 rad en vertical y vuelve despacio al encuadre al soltar. El canvas usa `touch-action: pan-y pinch-zoom`: el desplazamiento vertical y el zoom siguen siendo del navegador. Soltar tras arrastrar no fija ni deselecciona nada.
+- **Luz que responde**: el haz de inspección se orienta hacia el puntero fino o hacia el dedo que arrastra; al asentarse la cámara en una escena, su luz se enciende un instante (`realceLlegada`).
+- **Marcadores y rótulos anclados**: cada dato lleva un marcador 3D de tamaño constante en pantalla (`pulsoMarcador`) y, en la escena activa, un botón DOM anclado a su instalación. El canvas proyecta las posiciones por frame y escribe solo el `transform`; `anclasVisibles` elige las más cercanas dentro del encuadre y `distribuirAnclas` las reparte sin solaparse ni tapar el bloque de texto de la escena, con histéresis para que no salten. Las escenas con cientos de instancias usan un único botón que abre el recorrido por el panel. En móvil, con el panel abierto, los rótulos se retiran; la instalación sigue respondiendo al toque.
+- **Recorrido automático** (`posicionRecorrido`): viaje de 3,2 s y pausa de lectura de 4,4 s por escena, con botón de reproducir/pausar en la navegación; rueda, toque, tecla, pulsación o cualquier desplazamiento ajeno lo detienen. No existe con movimiento reducido.
+- **Revelados y 2D**: cada bloque de escena entra escalonado al llegar al viewport, en 2D y 3D y en cualquier ancho; los contadores animan siempre que el movimiento esté permitido. En 2D el póster deriva lentamente, un barrido de luz recorre la escena y el diagrama de cada escena entra con un fundido.
+- **Guía de gestos**: en la primera escena del 3D, un rótulo indica «Arrastre para mirar · Pulse un punto para abrirlo» y desaparece al primer gesto sobre el canvas o a los 15 s.
+
 ## Verificación
 
 Ejecutada el 08/10/2026 sobre el build final (Node 22.22.0, Chromium de Playwright 1.56.1):
@@ -45,8 +58,13 @@ Ejecutada el 08/10/2026 sobre el build final (Node 22.22.0, Chromium de Playwrig
 - Sonda de hover: con el puntero quieto y la cámara girando, el realce se actualiza por frame (`events.update()`) y el clic coincide con el último estado señalado.
 - Constelación y muro comparados con la exportación anterior en la misma GPU por software: antes negros en ambas; ahora con color por instancia y las tres tarjetas verdes visibles.
 
+### Segunda iteración
+
+- Prettier, ESLint (0 avisos) y TypeScript aprobados; 337/337 pruebas unitarias (19 en el archivo de cinemática interactiva); smoke portable 49/49; build de 239 páginas y precache de 28 recursos; Playwright 28/28 aprobadas y 1 omitida (GPU), con una prueba nueva del recorrido automático en 2D.
+- Recorrido con WebGL por software (1440 × 900): apertura activa y retirada; latido ambiental en reposo comprobado por diferencia entre capturas; rótulos anclados visibles y pulsables con panel y enlace exacto; arrastre que cambia el encuadre sin fijar datos; recorrido automático que avanza y se detiene al interactuar; sin errores de consola ni desborde. Móvil 390 px táctil en 3D Equilibrada: el toque abre el panel. 2D forzado: ambiente, revelado y contador.
+
 ## Límites
 
-- La prueba en GPU física sigue pendiente, igual que en la entrega anterior. Aquí el recorrido se verificó con WebGL por software (SwiftShader) en Chromium headless, que no mide el rendimiento real.
+- La prueba en GPU física sigue pendiente, igual que en la entrega anterior. Con GPU por software el monitor de rendimiento puede degradar la calidad hasta 2D en segundos; eso es el comportamiento previsto del fallback, no una medida de rendimiento real. Aquí el recorrido se verificó con WebGL por software (SwiftShader) en Chromium headless, que no mide el rendimiento real.
 - `animation-timeline` requiere Chrome/Edge 115+ (Safari y Firefox según versión); sin soporte el contenido se ve estático, sin pérdida de información.
 - Los hotspots no sustituyen al texto: el panel repite la identidad del dato y enlaza a su ficha, pero las cifras oficiales, sus períodos y sus fuentes siguen en la narrativa HTML.

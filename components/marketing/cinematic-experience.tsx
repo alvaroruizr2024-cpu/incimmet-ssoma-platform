@@ -14,15 +14,20 @@ import {
   ArrowDown,
   ArrowLeft,
   ArrowRight,
+  Hand,
   Monitor,
+  MousePointerClick,
   MoveRight,
   Orbit,
+  Pause,
+  Play,
   RotateCcw,
 } from 'lucide-react';
 import {
   ESCENAS,
   MENSAJES_FALLBACK,
   modoInicial,
+  posicionRecorrido,
   type Calidad3D,
   type ModoGrafico,
   type MotivoFallback3D,
@@ -33,6 +38,7 @@ import { Wordmark } from '@/components/brand/wordmark';
 import { useRelato3D } from '@/store/relato3d';
 import { IntroMotionContext } from './motion-context';
 import { usePageVisible, useReducedMotion } from './browser-state';
+import { AnchorLayer } from './anchor-layer';
 import { ContextLink } from './context-link';
 import { DataInspector } from './data-inspector';
 import { FallbackGallery } from './fallback-gallery';
@@ -93,6 +99,11 @@ export function CinematicExperience({
     reason: string;
     webgl: boolean;
   }>({ mode: '2d', reason: 'Preparando presentación accesible.', webgl: false });
+  // La apertura (fundido desde negro y titular escalonado) arranca con la primera pintura y se retira después.
+  const [apertura, setApertura] = useState<'on' | 'off'>('on');
+  const [recorrido, setRecorrido] = useState(false);
+  const [guia, setGuia] = useState(true);
+  const escenaActual = useRef(0);
   const catalogo = useMemo(() => catalogoInteractivo(data), [data]);
   const datoFijado = useRelato3D((s) => s.seleccion !== null);
   useEffect(() => {
@@ -143,6 +154,102 @@ export function CinematicExperience({
       scenes.disconnect();
     };
   }, []);
+  // Revelado por escena en cualquier ancho y modo: cada bloque entra cuando su sección llega al viewport.
+  useEffect(() => {
+    const el = root.current;
+    if (!el || !window.IntersectionObserver) return;
+    const contenidos = Array.from(
+      el.querySelectorAll<HTMLElement>('.intro-scene:not(.intro-hero) .intro-scene-content'),
+    );
+    const revelar = new IntersectionObserver(
+      (entries) => {
+        for (const entry of entries) {
+          if (!entry.isIntersecting) continue;
+          (entry.target as HTMLElement).dataset.visto = 'yes';
+          revelar.unobserve(entry.target);
+        }
+      },
+      { threshold: 0.15, rootMargin: '0px 0px -8% 0px' },
+    );
+    for (const contenido of contenidos) {
+      contenido.dataset.visto =
+        contenido.getBoundingClientRect().top > window.innerHeight * 0.92 ? 'no' : 'yes';
+      revelar.observe(contenido);
+    }
+    return () => revelar.disconnect();
+  }, []);
+  useEffect(() => {
+    const id = window.setTimeout(() => setApertura('off'), 3200);
+    return () => window.clearTimeout(id);
+  }, []);
+  // La guía de gestos se retira al primer gesto sobre el canvas o pasados unos segundos desde que el 3D está listo.
+  useEffect(() => {
+    if (!ready) return;
+    const id = window.setTimeout(() => setGuia(false), 15000);
+    const quitar = (event: PointerEvent) => {
+      if (event.target instanceof HTMLCanvasElement) setGuia(false);
+    };
+    window.addEventListener('pointerdown', quitar);
+    return () => {
+      window.clearTimeout(id);
+      window.removeEventListener('pointerdown', quitar);
+    };
+  }, [ready]);
+  useEffect(() => {
+    escenaActual.current = activeScene;
+  }, [activeScene]);
+  // Recorrido automático: desplaza el documento escena a escena; cualquier gesto del lector lo detiene.
+  useEffect(() => {
+    if (!recorrido || reduced) return;
+    const comienzos = Array.from(
+      root.current?.querySelectorAll<HTMLElement>('[data-intro-scene]') ?? [],
+    ).map((el) => el.getBoundingClientRect().top + window.scrollY);
+    const desde = escenaActual.current;
+    const inicio = performance.now();
+    const tope = () =>
+      Math.max(0, (document.scrollingElement?.scrollHeight ?? 0) - window.innerHeight);
+    let frame = 0,
+      esperado = -1;
+    const paso = () => {
+      // Si el documento se movió por otra causa (barra, teclado, gesto), el lector manda.
+      if (esperado >= 0 && Math.abs(window.scrollY - esperado) > 3) {
+        setRecorrido(false);
+        return;
+      }
+      const pos = posicionRecorrido((performance.now() - inicio) / 1000, comienzos.length, desde);
+      const a = comienzos[pos.desde] ?? 0,
+        b = comienzos[pos.hasta] ?? a;
+      esperado = Math.min(tope(), a + (b - a) * pos.mezcla);
+      window.scrollTo({ top: esperado, behavior: 'instant' });
+      if (pos.fin) {
+        setRecorrido(false);
+        return;
+      }
+      frame = requestAnimationFrame(paso);
+    };
+    frame = requestAnimationFrame(paso);
+    const detener = () => setRecorrido(false);
+    const teclas = (event: KeyboardEvent) => {
+      if (event.key !== 'Tab') detener();
+    };
+    const bajar = (event: PointerEvent) => {
+      if (!(event.target instanceof Element) || !event.target.closest('#intro-recorrido'))
+        detener();
+    };
+    window.addEventListener('wheel', detener, { passive: true });
+    window.addEventListener('touchstart', detener, { passive: true });
+    window.addEventListener('keydown', teclas);
+    window.addEventListener('pointerdown', bajar);
+    document.addEventListener('visibilitychange', detener);
+    return () => {
+      cancelAnimationFrame(frame);
+      window.removeEventListener('wheel', detener);
+      window.removeEventListener('touchstart', detener);
+      window.removeEventListener('keydown', teclas);
+      window.removeEventListener('pointerdown', bajar);
+      document.removeEventListener('visibilitychange', detener);
+    };
+  }, [recorrido, reduced]);
   const onFallback = useCallback((reason: MotivoFallback3D) => {
     setFailure(reason);
     setReady(false);
@@ -151,6 +258,7 @@ export function CinematicExperience({
   const onReady = useCallback(() => setReady(true), []);
   const is3d = capability.mode !== '2d' && !reduced && !manual2d && !failure;
   const activity = visible && inView;
+  const animado = !reduced && activity;
   // Al cambiar de escena o salir del 3D, el dato fijado deja de corresponder al encuadre.
   useEffect(() => {
     const relato = useRelato3D.getState();
@@ -188,16 +296,20 @@ export function CinematicExperience({
     relato.seleccionar(relato.seleccion ? null : vecinoEnEscena(catalogo, null, activeScene, 1));
   };
   return (
-    <IntroMotionContext.Provider value={is3d && activity}>
+    <IntroMotionContext.Provider value={animado}>
       <div
         ref={root}
         className="intro-root"
         data-mode={is3d ? '3d' : '2d'}
         data-ready={ready ? 'yes' : 'no'}
         data-motion={is3d && activity ? 'on' : 'off'}
-        data-ambient={!reduced && activity ? 'on' : 'off'}
+        data-ambient={animado ? 'on' : 'off'}
+        data-apertura={apertura}
+        data-recorrido={recorrido ? 'on' : 'off'}
+        data-fijado={datoFijado ? 'yes' : 'no'}
         data-scene={activeScene}
       >
+        <div className="intro-apertura" aria-hidden="true" />
         <header className="intro-header">
           <Link prefetch={false} href="#inicio" aria-label="INCIMMET — inicio de la presentación">
             <Wordmark />
@@ -300,6 +412,24 @@ export function CinematicExperience({
               <Orbit size={18} aria-hidden="true" />
             </button>
           )}
+          {!reduced && (
+            <button
+              type="button"
+              id="intro-recorrido"
+              className="intro-recorrido"
+              aria-label={
+                recorrido ? 'Pausar el recorrido automático' : 'Reproducir el recorrido automático'
+              }
+              aria-pressed={recorrido}
+              onClick={() => setRecorrido((r) => !r)}
+            >
+              {recorrido ? (
+                <Pause size={18} aria-hidden="true" />
+              ) : (
+                <Play size={18} aria-hidden="true" />
+              )}
+            </button>
+          )}
           <label className="intro-scene-picker">
             <span className="sr-only">Ir a una escena</span>
             <select
@@ -323,6 +453,15 @@ export function CinematicExperience({
             <ArrowRight size={18} />
           </button>
         </nav>
+        {is3d && guia && activeScene === 0 && (
+          <p className="intro-guia" role="note">
+            <Hand size={15} aria-hidden="true" />
+            <span>Arrastre para mirar</span>
+            <MousePointerClick size={15} aria-hidden="true" />
+            <span>Pulse un punto para abrirlo</span>
+          </p>
+        )}
+        {is3d && <AnchorLayer catalogo={catalogo} escena={activeScene} />}
         {is3d && <HoverCard catalogo={catalogo} />}
         {is3d && <DataInspector catalogo={catalogo} escena={activeScene} />}
         <footer className="intro-footer">

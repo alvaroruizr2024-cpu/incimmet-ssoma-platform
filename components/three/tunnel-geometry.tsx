@@ -1,7 +1,7 @@
 'use client';
-import { useEffect, useMemo } from 'react';
-import { useThree } from '@react-three/fiber';
-import { DoubleSide, NoColorSpace } from 'three';
+import { useEffect, useMemo, useRef } from 'react';
+import { useFrame, useThree } from '@react-three/fiber';
+import { DoubleSide, NoColorSpace, type MeshStandardMaterial } from 'three';
 import { GALERIA, perfilCalidad, type Calidad3D, type Tramo } from '@/lib/domain/cinematica';
 import { crearBoveda, crearRugosidad } from './geometry';
 import { InstancedSupport, SegmentInstances } from './instanced-support';
@@ -38,6 +38,15 @@ export function TunnelGeometry({ quality }: { quality: Calidad3D }) {
     [],
   );
   const fixtures = useMemo(() => Array.from({ length: 17 }, (_, i) => -i * 6), []);
+  const lamparas = useRef<(MeshStandardMaterial | null)[]>([]);
+  // Solo tres luminarias titilan, y apenas: una galería real nunca parpadea entera.
+  useFrame(({ clock }) => {
+    const t = clock.elapsedTime;
+    [3, 9, 14].forEach((i, n) => {
+      const m = lamparas.current[i];
+      if (m) m.emissiveIntensity = 3 + Math.sin(t * 17 + n) * Math.sin(t * 3.1 + n * 2) * 0.22;
+    });
+  });
   return (
     <group name="galeria-minera">
       <mesh geometry={vault} name="boveda-roca">
@@ -77,7 +86,7 @@ export function TunnelGeometry({ quality }: { quality: Calidad3D }) {
       ))}
       <SegmentInstances segments={cables} radius={0.025} color="#252a30" name="cables-protegidos" />
       <SegmentInstances segments={hangers} radius={0.022} color="#84929e" name="soportes-cable" />
-      {fixtures.map((z) => (
+      {fixtures.map((z, i) => (
         <group key={z} position={[2.7, 4.04, z]} rotation={[0, 0, -0.38]} name="lampara-minera">
           <mesh>
             <boxGeometry args={[0.75, 0.13, 0.26]} />
@@ -86,6 +95,9 @@ export function TunnelGeometry({ quality }: { quality: Calidad3D }) {
           <mesh position={[0, -0.075, 0]}>
             <boxGeometry args={[0.58, 0.025, 0.18]} />
             <meshStandardMaterial
+              ref={(m: MeshStandardMaterial | null) => {
+                lamparas.current[i] = m;
+              }}
               color="#dcefff"
               emissive="#c6e2f4"
               emissiveIntensity={3}

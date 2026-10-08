@@ -84,6 +84,37 @@ test('WebGL bloqueado conserva narrativa y controles', async ({ page }) => {
   await expect(page.locator('[data-intro-scene]')).toHaveCount(8);
 });
 
+test('el recorrido automático avanza de escena y se detiene al interactuar', async ({ page }) => {
+  await page.addInitScript(() => {
+    const original = HTMLCanvasElement.prototype.getContext;
+    Object.defineProperty(HTMLCanvasElement.prototype, 'getContext', {
+      value: function (this: HTMLCanvasElement, type: string, ...args: unknown[]) {
+        return type === 'webgl' || type === 'webgl2'
+          ? null
+          : Reflect.apply(original, this, [type, ...args]);
+      },
+    });
+  });
+  await page.goto('/');
+  const root = page.locator('.intro-root');
+  await expect(root).toHaveAttribute('data-mode', '2d');
+  await expect(root).toHaveAttribute('data-scene', '0');
+  const boton = page.locator('#intro-recorrido');
+  await expect(boton).toHaveAttribute('aria-label', 'Reproducir el recorrido automático');
+  await boton.click();
+  await expect(boton).toHaveAttribute('aria-pressed', 'true');
+  await expect(root).not.toHaveAttribute('data-scene', '0', { timeout: 15000 });
+  await page.keyboard.press('Escape');
+  await expect(boton).toHaveAttribute('aria-pressed', 'false');
+  // La rueda del ratón, incluso sobre la propia navegación, también devuelve el control al lector.
+  await boton.click();
+  await expect(boton).toHaveAttribute('aria-pressed', 'true');
+  await page.waitForTimeout(800);
+  await page.mouse.wheel(0, 10);
+  await expect(boton).toHaveAttribute('aria-pressed', 'false');
+  await expect(page.locator('[data-intro-scene]')).toHaveCount(8);
+});
+
 test.describe('WebGL real — requiere GPU/WebGL2 disponible', () => {
   test.skip(
     process.env.E2E_WEBGL !== '1',

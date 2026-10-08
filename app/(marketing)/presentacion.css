@@ -808,11 +808,15 @@
   opacity: 1;
 }
 
-/* Interacción 3D solo con puntero fino: el tacto sigue desplazando el documento sin interferencias. */
-@media (hover: hover) and (pointer: fine) {
-  .intro-root[data-mode='3d'] .intro-canvas {
-    pointer-events: auto;
-  }
+/* El canvas recibe el puntero en 3D: arrastre para mirar y pulsación para fijar; el desplazamiento vertical sigue siendo del documento. */
+.intro-root[data-mode='3d'] .intro-canvas {
+  pointer-events: auto;
+  touch-action: pan-y pinch-zoom;
+}
+
+.intro-root[data-mode='3d'] .intro-canvas canvas {
+  touch-action: pan-y pinch-zoom;
+  cursor: grab;
 }
 
 .intro-root[data-mode='3d'][data-scene='4'] .intro-vignette {
@@ -1498,5 +1502,309 @@
   }
   to {
     transform: scaleY(1);
+  }
+}
+
+/* Apertura: fundido desde negro y titular escalonado desde la primera pintura; sin JavaScript también termina visible. */
+.intro-apertura {
+  position: fixed;
+  inset: 0;
+  z-index: 60;
+  background: #050b16;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.intro-root[data-apertura='on'] .intro-apertura {
+  animation: intro-abrir 2.1s cubic-bezier(0.4, 0, 0.2, 1) both;
+}
+
+.intro-root[data-apertura='on'] .intro-hero .intro-label {
+  animation: intro-revelar 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 0.4s both;
+}
+
+.intro-root[data-apertura='on'] .intro-hero h1 {
+  animation: intro-revelar 1.1s cubic-bezier(0.2, 0.7, 0.2, 1) 0.55s both;
+}
+
+.intro-root[data-apertura='on'] .intro-hero .intro-lead {
+  animation: intro-revelar 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 0.85s both;
+}
+
+.intro-root[data-apertura='on'] .intro-hero .intro-motto {
+  animation: intro-revelar 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 1s both;
+}
+
+.intro-root[data-apertura='on'] .intro-hero .intro-hero-links {
+  animation: intro-revelar 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 1.15s both;
+}
+
+.intro-root[data-apertura='on'] .intro-hero .intro-fine {
+  animation: intro-revelar 0.95s cubic-bezier(0.2, 0.7, 0.2, 1) 1.3s both;
+}
+
+/* Revelado por escena: los bloques de cada sección entran escalonados al llegar al viewport, en 2D y 3D. */
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='no'] > * {
+  opacity: 0;
+}
+
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='yes'] > * {
+  animation: intro-revelar 0.8s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='yes'] > :nth-child(2) {
+  animation-delay: 0.08s;
+}
+
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='yes'] > :nth-child(3) {
+  animation-delay: 0.16s;
+}
+
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='yes'] > :nth-child(4) {
+  animation-delay: 0.24s;
+}
+
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='yes'] > :nth-child(5) {
+  animation-delay: 0.32s;
+}
+
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='yes'] > :nth-child(6) {
+  animation-delay: 0.4s;
+}
+
+.intro-root[data-ambient='on'] .intro-scene-content[data-visto='yes'] > :nth-child(n + 7) {
+  animation-delay: 0.48s;
+}
+
+/* Anclas DOM de los datos de la escena activa: el canvas las coloca; el botón conserva texto, estado y acción. */
+.intro-anclas {
+  position: fixed;
+  inset: 0;
+  z-index: 35;
+  pointer-events: none;
+}
+
+.intro-ancla {
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  min-height: 36px;
+  margin: -18px 0 0 -16px;
+  padding: 6px 12px 6px 8px;
+  border: 1px solid rgba(98, 205, 255, 0.45);
+  border-radius: 999px;
+  background: rgba(7, 20, 39, 0.86);
+  color: #e2e8f0;
+  font-size: 12px;
+  line-height: 1.25;
+  text-align: left;
+  white-space: nowrap;
+  pointer-events: auto;
+  transform: translate3d(-9999px, -9999px, 0);
+  will-change: transform;
+  transition:
+    border-color 0.15s,
+    background-color 0.15s;
+}
+
+.intro-ancla[data-visible='no'] {
+  display: none;
+}
+
+.intro-ancla:hover {
+  border-color: #62cdff;
+  background: rgba(0, 32, 96, 0.94);
+}
+
+.intro-ancla[aria-pressed='true'] {
+  border-color: #62cdff;
+  background: rgba(0, 112, 192, 0.94);
+}
+
+.intro-ancla-punto {
+  position: relative;
+  flex-shrink: 0;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #62cdff;
+}
+
+.intro-ancla-punto::after {
+  content: '';
+  position: absolute;
+  inset: -5px;
+  border: 1px solid rgba(98, 205, 255, 0.7);
+  border-radius: 50%;
+  animation: intro-pulso 2.6s ease-out infinite;
+}
+
+.intro-ancla-texto {
+  display: grid;
+  font-weight: 600;
+}
+
+.intro-ancla-texto small {
+  font-size: 11px;
+  font-weight: 500;
+  color: #bae6fd;
+}
+
+.intro-recorrido {
+  margin-top: 2px;
+  border: 1px solid transparent;
+}
+
+.intro-recorrido[aria-pressed='true'] {
+  border-color: #62cdff;
+  background: #0070c0;
+  color: #fff;
+}
+
+/* Guía de gestos: aparece en la primera escena del 3D y se retira al primer gesto sobre el canvas. */
+.intro-guia {
+  position: fixed;
+  left: 5vw;
+  bottom: 26px;
+  z-index: 36;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
+  padding: 9px 14px;
+  border: 1px solid #4f6686;
+  border-radius: 999px;
+  background: rgba(7, 20, 39, 0.86);
+  color: #bae6fd;
+  font-size: 12px;
+  line-height: 1.3;
+  animation: intro-revelar 0.8s ease-out 1.8s both;
+}
+
+.intro-guia svg {
+  flex-shrink: 0;
+}
+
+/* Modo 2D con movimiento: deriva lenta del póster, barrido de luz y entrada del diagrama de cada escena. */
+.intro-root[data-mode='2d'][data-ambient='on'] .intro-poster {
+  animation: intro-deriva 18s ease-in-out infinite alternate;
+}
+
+.intro-root[data-mode='2d'][data-ambient='on'] .intro-gallery-svg {
+  animation: intro-aparecer 0.9s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+
+.intro-root[data-mode='2d'][data-ambient='on'] .intro-fallback::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    100deg,
+    transparent 32%,
+    rgba(98, 205, 255, 0.09) 50%,
+    transparent 68%
+  );
+  transform: translateX(-60%);
+  animation: intro-barrido 11s ease-in-out infinite;
+  pointer-events: none;
+}
+
+@media (max-width: 900px) {
+  .intro-ancla {
+    min-height: 32px;
+    margin: -16px 0 0 -15px;
+    padding: 5px 10px 5px 7px;
+    font-size: 11px;
+  }
+
+  .intro-ancla-texto small {
+    display: none;
+  }
+
+  .intro-root[data-fijado='yes'] .intro-anclas {
+    display: none;
+  }
+
+  .intro-guia {
+    left: 14px;
+    right: 14px;
+    bottom: 14px;
+    justify-content: center;
+    font-size: 11px;
+  }
+}
+
+@media print {
+  .intro-apertura {
+    display: none !important;
+  }
+
+  .intro-anclas {
+    display: none !important;
+  }
+
+  .intro-guia {
+    display: none !important;
+  }
+}
+
+@keyframes intro-abrir {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes intro-revelar {
+  from {
+    opacity: 0;
+    transform: translateY(18px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes intro-pulso {
+  from {
+    transform: scale(0.6);
+    opacity: 1;
+  }
+  to {
+    transform: scale(1.7);
+    opacity: 0;
+  }
+}
+
+@keyframes intro-deriva {
+  from {
+    transform: scale(1) translate(0, 0);
+  }
+  to {
+    transform: scale(1.07) translate(-1.5%, 1%);
+  }
+}
+
+@keyframes intro-aparecer {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes intro-barrido {
+  from {
+    transform: translateX(-60%);
+  }
+  to {
+    transform: translateX(60%);
   }
 }

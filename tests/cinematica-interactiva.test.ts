@@ -3,16 +3,32 @@ import { base } from './fixtures';
 import { resumenPresentacion } from '@/lib/domain/presentacion';
 import {
   ACENTOS_ESCENA,
+  APERTURA,
   ENCUADRES,
   ESCENAS,
+  GIRO,
+  MAX_ANCLAS,
   MIRADA_LIBRE,
   OPTICA,
+  RECORRIDO,
+  RESPIRACION,
   VENTANA_MOMENTO,
   acentoEscena,
+  anclasVisibles,
+  aperturaCamara,
   desplazamientoMirada,
+  distribuirAnclas,
+  giroDesdeArrastre,
+  giroHaciaReposo,
   opticaCamara,
+  posicionRecorrido,
   presenciaMomento,
+  pulsoMarcador,
+  realceLlegada,
+  respiracionCamara,
   velocidadNarrativa,
+  type AnclaProyectada,
+  type CajaAncla,
 } from '@/lib/domain/cinematica';
 import {
   buscarDato,
@@ -90,6 +106,152 @@ describe('Óptica, presencia y acentos derivados del progreso', () => {
     expect(velocidadNarrativa(0, 1, 0.016)).toBe(1);
     expect(velocidadNarrativa(0.1, 0.1 + 0.35 * 0.5, 0.5)).toBeCloseTo(1, 6);
     expect(velocidadNarrativa(NaN, 0.2, 0.016)).toBe(0);
+  });
+});
+
+describe('Apertura, reposo, gestos y recorrido automático', () => {
+  it('la apertura parte desde atrás y en negro, y termina en el encuadre con exposición plena', () => {
+    const inicio = aperturaCamara(0);
+    expect(inicio.retroceso).toBe(APERTURA.retroceso);
+    expect(inicio.descenso).toBe(APERTURA.descenso);
+    expect(inicio.exposicion).toBe(0);
+    expect(inicio.terminada).toBe(false);
+    const fin = aperturaCamara(APERTURA.duracion);
+    expect(fin).toEqual({ retroceso: 0, descenso: 0, fovExtra: 0, exposicion: 1, terminada: true });
+    expect(aperturaCamara(99)).toEqual(fin);
+    let previo = aperturaCamara(0);
+    for (let i = 1; i <= 100; i++) {
+      const actual = aperturaCamara((i / 100) * APERTURA.duracion);
+      expect(actual.retroceso).toBeLessThanOrEqual(previo.retroceso + 1e-9);
+      expect(actual.exposicion).toBeGreaterThanOrEqual(previo.exposicion - 1e-9);
+      previo = actual;
+    }
+    expect(aperturaCamara(NaN).exposicion).toBe(0);
+  });
+  it('la respiración en reposo queda dentro de milímetros y no propaga NaN', () => {
+    for (let t = 0; t < 60; t += 0.37) {
+      const r = respiracionCamara(t);
+      expect(Math.abs(r.x)).toBeLessThanOrEqual(RESPIRACION.x);
+      expect(Math.abs(r.y)).toBeLessThanOrEqual(RESPIRACION.y);
+      expect(Math.abs(r.giro)).toBeLessThanOrEqual(RESPIRACION.giro);
+    }
+    expect(respiracionCamara(NaN)).toEqual(respiracionCamara(0));
+  });
+  it('el giro por arrastre está acotado, ignora valores no finitos y vuelve al reposo', () => {
+    const quieto = { yaw: 0, pitch: 0 };
+    const hacia = giroDesdeArrastre(quieto, 100, 0, 1000);
+    expect(hacia.yaw).toBeCloseTo(-0.17, 6);
+    expect(hacia.pitch).toBe(0);
+    const tope = giroDesdeArrastre(quieto, -100000, 100000, 1000);
+    expect(tope).toEqual({ yaw: GIRO.maxYaw, pitch: GIRO.maxPitch });
+    expect(giroDesdeArrastre(quieto, NaN, Infinity, 0)).toEqual(quieto);
+    const relajado = giroHaciaReposo({ yaw: 0.5, pitch: -0.2 }, 1);
+    expect(Math.abs(relajado.yaw)).toBeLessThan(0.5);
+    expect(Math.abs(relajado.pitch)).toBeLessThan(0.2);
+    expect(Math.sign(relajado.yaw)).toBe(1);
+    expect(giroHaciaReposo({ yaw: NaN, pitch: 0.1 }, 10).yaw).toBe(0);
+  });
+  it('el realce de llegada es nulo en las pausas y se enciende al asentarse la cámara', () => {
+    for (let i = 0; i < ENCUADRES.length; i++) expect(realceLlegada(i / 7)).toBe(0);
+    expect(realceLlegada(0.86 / 7)).toBeCloseTo(1, 9);
+    expect(realceLlegada(0.5 / 7)).toBe(0);
+    for (let i = 0; i <= 500; i++) {
+      const r = realceLlegada(i / 500);
+      expect(r).toBeGreaterThanOrEqual(0);
+      expect(r).toBeLessThanOrEqual(1);
+    }
+    expect(realceLlegada(NaN)).toBe(0);
+  });
+  it('el recorrido viaja, hace pausa y termina en la última escena', () => {
+    const ciclo = RECORRIDO.viaje + RECORRIDO.pausa;
+    expect(posicionRecorrido(0, 8)).toEqual({ desde: 0, hasta: 1, mezcla: 0, fin: false });
+    const medio = posicionRecorrido(RECORRIDO.viaje / 2, 8);
+    expect(medio.desde).toBe(0);
+    expect(medio.hasta).toBe(1);
+    expect(medio.mezcla).toBeCloseTo(0.5, 6);
+    expect(posicionRecorrido(RECORRIDO.viaje + 1, 8).mezcla).toBe(1);
+    expect(posicionRecorrido(ciclo * 3 + 0.1, 8).desde).toBe(3);
+    expect(posicionRecorrido(ciclo * 7, 8)).toEqual({ desde: 7, hasta: 7, mezcla: 1, fin: true });
+    expect(posicionRecorrido(0, 8, 7).fin).toBe(true);
+    expect(posicionRecorrido(0, 8, 5).desde).toBe(5);
+    expect(posicionRecorrido(NaN, NaN).fin).toBe(true);
+  });
+  it('las anclas visibles están delante y dentro del encuadre, cercanas primero y acotadas', () => {
+    const anclas: AnclaProyectada[] = [
+      { clave: 'lejos', x: 0.5, y: 0.5, profundidad: 0.9, delante: true },
+      { clave: 'cerca', x: 0.2, y: 0.4, profundidad: 0.1, delante: true },
+      { clave: 'fuera', x: 1.4, y: 0.5, profundidad: 0.2, delante: true },
+      { clave: 'detras', x: 0.5, y: 0.5, profundidad: 1.2, delante: false },
+      { clave: 'nan', x: NaN, y: 0.5, profundidad: 0.2, delante: true },
+    ];
+    expect(anclasVisibles(anclas).map((a) => a.clave)).toEqual(['cerca', 'lejos']);
+    expect(anclasVisibles(anclas, 1).map((a) => a.clave)).toEqual(['cerca']);
+    const muchas = Array.from({ length: 30 }, (_, i) => ({
+      clave: String(i),
+      x: 0.5,
+      y: 0.5,
+      profundidad: i / 30,
+      delante: true,
+    }));
+    expect(anclasVisibles(muchas)).toHaveLength(MAX_ANCLAS);
+    expect(anclasVisibles([], 0)).toEqual([]);
+  });
+  it('los rótulos se reparten sin solaparse ni salir del encuadre y la más cercana conserva su sitio', () => {
+    const caja = (clave: string, x: number, y: number, preferida?: number): CajaAncla => ({
+      clave,
+      x,
+      y,
+      ancho: 150,
+      alto: 36,
+      preferida,
+    });
+    const reparto = distribuirAnclas(
+      [caja('a', 400, 300), caja('b', 410, 305), caja('c', 420, 310), caja('d', 900, 600)],
+      1440,
+      900,
+    );
+    expect(reparto.get('a')).toEqual({ x: 400, y: 300, opcion: 0 });
+    expect(reparto.get('d')).toEqual({ x: 900, y: 600, opcion: 0 });
+    expect(reparto.size).toBe(4);
+    const cajasColocadas = [...reparto.values()].map((s) => ({
+      x: s.x - 16,
+      y: s.y - 18,
+      ancho: 150,
+      alto: 36,
+    }));
+    for (let i = 0; i < cajasColocadas.length; i++)
+      for (let j = i + 1; j < cajasColocadas.length; j++) {
+        const p = cajasColocadas[i]!,
+          q = cajasColocadas[j]!;
+        const separadas =
+          p.x + p.ancho <= q.x ||
+          q.x + q.ancho <= p.x ||
+          p.y + p.alto <= q.y ||
+          q.y + q.alto <= p.y;
+        expect(separadas).toBe(true);
+      }
+    // Una caja ocupada (el texto de la escena) desplaza el rótulo o lo omite si no cabe.
+    const texto = { x: 0, y: 0, ancho: 700, alto: 900 };
+    expect(distribuirAnclas([caja('t', 400, 300)], 1440, 900, 6, [texto]).size).toBe(0);
+    const junto = distribuirAnclas([caja('u', 712, 300)], 1440, 900, 6, [texto]).get('u');
+    expect(junto?.opcion).toBe(4);
+    // Sin hueco en un encuadre minúsculo, el rótulo se omite en vez de salirse.
+    expect(distribuirAnclas([caja('x', 5, 5)], 120, 60).size).toBe(0);
+    // La opción recordada se conserva mientras siga libre.
+    expect(distribuirAnclas([caja('p', 400, 300, 2)], 1440, 900).get('p')?.opcion).toBe(2);
+    expect(distribuirAnclas([caja('n', NaN, 300)], 1440, 900).size).toBe(0);
+  });
+  it('el marcador pulsa dentro de límites y crece al señalar o fijar', () => {
+    for (let t = 0; t < 10; t += 0.1) {
+      const quieto = pulsoMarcador(t, 2, 0);
+      expect(quieto.escala).toBeGreaterThanOrEqual(1);
+      expect(quieto.escala).toBeLessThanOrEqual(1.18 + 1e-9);
+      expect(quieto.opacidad).toBeLessThanOrEqual(0.7 + 1e-9);
+      const fijado = pulsoMarcador(t, 2, 1);
+      expect(fijado.escala).toBeGreaterThan(quieto.escala);
+      expect(fijado.opacidad).toBeLessThanOrEqual(1);
+    }
+    expect(pulsoMarcador(NaN, NaN, NaN).opacidad).toBeGreaterThan(0);
   });
 });
 

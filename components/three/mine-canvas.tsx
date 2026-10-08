@@ -18,6 +18,7 @@ import {
   Group,
   Object3D,
   PointLight,
+  SpotLight,
   SRGBColorSpace,
 } from 'three';
 import {
@@ -25,6 +26,7 @@ import {
   degradarCalidad,
   perfilCalidad,
   puedeMedirRendimiento,
+  realceLlegada,
   type Calidad3D,
   type MotivoFallback3D,
 } from '@/lib/domain/cinematica';
@@ -34,6 +36,8 @@ import { TunnelGeometry } from './tunnel-geometry';
 import { CameraRig } from './camera-rig';
 import { Atmosphere } from './atmosphere';
 import { DataMoments } from './data-moments';
+import { AnclasProyectadas } from './anclas-proyectadas';
+import { clicTrasArrastre } from './gestos';
 const HighBloom = lazy(() => import('./high-bloom'));
 const acentoTemporal = new Color();
 interface Props {
@@ -111,7 +115,13 @@ function Warmup({ done }: { done: () => void }) {
   );
   return null;
 }
-function Lighting({ timeline }: { timeline: RefObject<number> }) {
+function Lighting({
+  timeline,
+  punteroRef,
+}: {
+  timeline: RefObject<number>;
+  punteroRef: RefObject<[number, number]>;
+}) {
   const group = useRef<Group>(null);
   const light = useRef<PointLight>(null);
   const fog = useRef<Fog>(null);
@@ -123,12 +133,27 @@ function Lighting({ timeline }: { timeline: RefObject<number> }) {
     }),
     [],
   );
-  const target = useMemo(() => new Object3D(), []);
+  const objetivo = useRef<Object3D>(null);
+  const haz = useRef<SpotLight>(null);
+  // El objetivo del haz es un objeto propio del grupo; se mueve por frame sin pasar por React.
+  useEffect(() => {
+    const spot = haz.current,
+      blanco = objetivo.current;
+    if (spot && blanco) spot.target = blanco;
+  }, []);
   useFrame(({ camera, scene }) => {
     const p = timeline.current * 7,
       risk = Math.max(0, 1 - Math.abs(p - 4)),
       exit = Math.max(0, p - 6);
     const acento = acentoEscena(timeline.current);
+    const llegada = realceLlegada(timeline.current);
+    // El haz de inspección sigue la mano: el puntero fino, o el dedo al arrastrar, orientan la luz.
+    const [px, py] = punteroRef.current;
+    const blanco = objetivo.current;
+    if (blanco) {
+      blanco.position.x += (1 + px * 5 - blanco.position.x) * 0.08;
+      blanco.position.y += (py * 3 - blanco.position.y) * 0.08;
+    }
     if (group.current) {
       group.current.position.copy(camera.position);
       group.current.quaternion.copy(camera.quaternion);
@@ -136,7 +161,8 @@ function Lighting({ timeline }: { timeline: RefObject<number> }) {
     if (light.current) {
       // La luz de acompañamiento toma el acento de la escena que llega, al ritmo del tramo.
       light.current.color.set(acento.desde).lerp(acentoTemporal.set(acento.hasta), acento.mezcla);
-      light.current.intensity = 55 + exit * 45;
+      // Al asentarse la cámara en una escena, su luz se enciende un instante.
+      light.current.intensity = 55 + exit * 45 + llegada * 70;
     }
     if (fog.current) {
       fog.current.color
@@ -154,10 +180,10 @@ function Lighting({ timeline }: { timeline: RefObject<number> }) {
       <hemisphereLight args={['#c0d5e2', '#393128', 0.9]} />
       <ambientLight intensity={0.2} />
       <group ref={group} name="haz-de-inspeccion">
-        <primitive object={target} position={[1, 0, -16]} />
+        <object3D ref={objetivo} position={[1, 0, -16]} name="objetivo-del-haz" />
         <spotLight
+          ref={haz}
           position={[0.2, 0.3, -0.3]}
-          target={target}
           color="#d9eeff"
           intensity={100}
           distance={40}
@@ -195,7 +221,21 @@ function Lighting({ timeline }: { timeline: RefObject<number> }) {
     </>
   );
 }
-/** Inactivo: never; arranque/movimiento/balizas/interacción: always; lectura estática: demand. */
+/** En reposo el canvas sigue vivo a ritmo bajo: polvo, niebla, luminarias y respiración de cámara. */
+function AmbientClock({ activo, fps }: { activo: boolean; fps: number }) {
+  const { invalidate } = useThree();
+  useEffect(() => {
+    if (!activo) return;
+    const periodo = 1000 / fps;
+    let id = window.setTimeout(function latido() {
+      invalidate();
+      id = window.setTimeout(latido, periodo);
+    }, periodo);
+    return () => window.clearTimeout(id);
+  }, [activo, fps, invalidate]);
+  return null;
+}
+/** Inactivo: never; arranque/movimiento/balizas/interacción: always; lectura: demand con latido ambiental. */
 export default function MineCanvas({
   active,
   initialQuality,
@@ -212,6 +252,7 @@ export default function MineCanvas({
   const lastDecline = useRef(0);
   const timeline = useRef(0);
   const velocidad = useRef(0);
+  const puntero = useRef<[number, number]>([0, 0]);
   const onProgreso = useCallback((p: number) => {
     timeline.current = p;
   }, []);
@@ -269,7 +310,10 @@ export default function MineCanvas({
           gl.toneMappingExposure = 1.35;
           gl.outputColorSpace = SRGBColorSpace;
         }}
-        onPointerMissed={() => useRelato3D.getState().seleccionar(null)}
+        style={{ touchAction: 'pan-y pinch-zoom' }}
+        onPointerMissed={() => {
+          if (!clicTrasArrastre()) useRelato3D.getState().seleccionar(null);
+        }}
       >
         <ContextGuard onFallback={onFallback} onReady={onReady} />
         <InteraccionBridge onMotion={onMotion} />
@@ -280,10 +324,13 @@ export default function MineCanvas({
           timeline={timeline}
           onProgreso={onProgreso}
           velocidadRef={velocidad}
+          punteroRef={puntero}
         />
-        <Lighting timeline={timeline} />
+        <Lighting timeline={timeline} punteroRef={puntero} />
         <TunnelGeometry quality={quality} />
         <DataMoments data={data} timeline={timeline} pulse={active && pulse} />
+        <AnclasProyectadas escena={scene} />
+        <AmbientClock activo={active} fps={quality === 'baja' ? 24 : 30} />
         <Atmosphere quality={quality} moving={busy} velocidadRef={velocidad} />
         {quality === 'alta' && (
           <Suspense fallback={null}>

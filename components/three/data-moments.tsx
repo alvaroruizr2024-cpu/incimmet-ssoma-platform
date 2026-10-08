@@ -32,6 +32,8 @@ import { acotar, presenciaMomento, type Vec3 } from '@/lib/domain/cinematica';
 import { mismaReferencia, type ReferenciaDato, type TipoDato } from '@/lib/domain/interactivos3d';
 import { useRelato3D } from '@/store/relato3d';
 import { Halo } from './halo';
+import { claveAncla, claveMomento, registrarObjeto } from './anclas';
+import { Marcador } from './marker';
 
 // Auxiliares del módulo: evitan asignar objetos por frame; nunca se entregan a React.
 const auxiliar = new Object3D();
@@ -127,7 +129,7 @@ function Glyphs({
   };
   const fijar = (event: ThreeEvent<MouseEvent>) => {
     const mesh = ref.current;
-    if (event.instanceId === undefined || !mesh) return;
+    if (event.instanceId === undefined || !mesh || event.delta > 6) return;
     event.stopPropagation();
     const d = datos[event.instanceId];
     if (!d) return;
@@ -259,14 +261,25 @@ function Hotspot({
   dato,
   realce,
   children,
+  marcador = true,
+  indice = 0,
 }: {
   dato: ReferenciaDato;
   realce: { ancho: number; alto: number; posicion: Vec3; color?: string };
   children: ReactNode;
+  marcador?: boolean;
+  indice?: number;
 }) {
   const grupo = useRef<Group>(null);
   const nivel = useRef(0);
   const { invalidate } = useThree();
+  const { tipo, clave, escena } = dato;
+  // El botón DOM de este dato se proyecta desde el grupo; se da de baja al desmontar.
+  useEffect(() => {
+    const g = grupo.current;
+    if (!g) return;
+    return registrarObjeto(claveAncla({ tipo, clave, escena }), g);
+  }, [tipo, clave, escena]);
   useFrame((_state, delta) => {
     const { hover, seleccion, foco, fijarFoco } = useRelato3D.getState();
     const elegido = mismaReferencia(seleccion, dato);
@@ -298,6 +311,8 @@ function Hotspot({
   };
   const fijar = (event: ThreeEvent<MouseEvent>) => {
     event.stopPropagation();
+    // Soltar tras arrastrar la mirada no fija el dato.
+    if (event.delta > 6) return;
     const g = grupo.current;
     if (!g) return;
     g.getWorldPosition(mundo);
@@ -313,6 +328,18 @@ function Hotspot({
     >
       {children}
       <Halo {...realce} nivel={nivel} />
+      {marcador && (
+        <Marcador
+          posicion={[
+            realce.posicion[0],
+            realce.posicion[1] + Math.min(realce.alto / 2 + 0.16, 2.2),
+            realce.posicion[2] + 0.35,
+          ]}
+          color={realce.color ?? '#62cdff'}
+          indice={indice}
+          nivelRef={nivel}
+        />
+      )}
     </group>
   );
 }
@@ -339,6 +366,7 @@ function Beacon({
     <group position={position} name={`baliza-${id}`}>
       <Hotspot
         dato={dato}
+        indice={index}
         realce={{ ancho: 0.95, alto: 1.8, posicion: [0, 0.85, -0.3], color: '#FFC000' }}
       >
         <mesh position={[0, 0.55, 0]}>
@@ -401,6 +429,12 @@ function Momento({
 }) {
   const ref = useRef<Group>(null);
   const estado = useRef({ visible: true, escala: -1 });
+  // La instalación completa también es un ancla: las escenas con cientos de instancias usan un solo botón.
+  useEffect(() => {
+    const g = ref.current;
+    if (!g) return;
+    return registrarObjeto(claveMomento(indice), g);
+  }, [indice]);
   useFrame(() => {
     const g = ref.current;
     if (!g) return;
@@ -516,10 +550,11 @@ export function DataMoments({
         position={[1.1, 0, -27]}
         name="momento-03-porticos-por-proyecto"
       >
-        {estaciones.map((p) => (
+        {estaciones.map((p, i) => (
           <group key={p.codigo} position={p.posicion} name={`estacion-${p.codigo}`}>
             <Hotspot
               dato={referencia('proyecto', p.codigo, 2)}
+              indice={i}
               realce={{
                 ancho: 1.25,
                 alto: p.altura + 0.95,
@@ -557,6 +592,7 @@ export function DataMoments({
           >
             <Hotspot
               dato={referencia('indicador', v.sigla, 3)}
+              indice={i}
               realce={{ ancho: 1.34, alto: 2.02, posicion: [0, 0, -0.22] }}
             >
               <mesh position={[0, 0, -0.1]}>
@@ -650,6 +686,7 @@ export function DataMoments({
           <group key={c.titulo} position={[(i % 2) * 1.45 - 0.5, 0, -Math.floor(i / 2) * 1.65]}>
             <Hotspot
               dato={referencia('estacion', c.titulo, 6)}
+              indice={i}
               realce={{ ancho: 1.5, alto: 2.35, posicion: [0, 1.12, -0.24] }}
             >
               <Portal width={1.1} height={1.85} color="#00B0F0" />
@@ -678,6 +715,7 @@ export function DataMoments({
         <group position={[0, 0, -93]}>
           <Hotspot
             dato={referencia('leccion', 'lecciones', 7)}
+            indice={3}
             realce={{ ancho: 7.4, alto: 6.6, posicion: [0, 3.05, -0.45], color: '#ffd59f' }}
           >
             <Portal width={6.5} height={5.8} color="#DFEAF0" />

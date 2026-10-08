@@ -17,6 +17,7 @@ export function FallbackGallery({ data, scene }: { data: ResumenPresentacion; sc
         className="intro-poster"
       />
       <svg
+        key={scene}
         className="intro-gallery-svg"
         viewBox="0 0 1440 1000"
         preserveAspectRatio="xMidYMid slice"

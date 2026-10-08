@@ -49,3 +49,18 @@ La prueba en GPU física sigue pendiente. Con GPU por software el amortiguado de
 
 CONTENIDO
 incimmet-ssoma-cinematica.zip incluye código fuente, lockfile y build out regenerado, sin node_modules ni credenciales. Misma ejecución: node scripts/serve-export.mjs --port 3100 y abrir http://127.0.0.1:3100/ para la presentación o /dashboard para la aplicación.
+
+================================================================
+CINEMÁTICA AMPLIADA, INTERACCIÓN TÁCTIL Y PUBLICACIÓN — 08/10/2026 (America/Lima)
+
+Cambios sobre la presentación (ruta /), sin dependencias nuevas: apertura cinematográfica (la cámara llega desde atrás y más baja mientras la exposición sube desde el negro; titular escalonado); latido ambiental en reposo a 30 fps con polvo, niebla, tres luminarias que titilan y respiración de cámara; arrastre para mirar con ratón o dedo (el desplazamiento vertical táctil sigue siendo del documento) con retorno suave al encuadre; haz de inspección que sigue la mano; realce lumínico al asentarse en cada escena; marcadores 3D de tamaño constante en cada dato y rótulos DOM anclados a las instalaciones de la escena activa, pulsables con ratón, dedo y teclado, repartidos sin solaparse ni tapar el texto; botón de recorrido automático con pausa (cualquier gesto del lector lo detiene); revelados por escena en cualquier ancho y modo; en 2D, deriva del póster, barrido de luz, entrada del diagrama de cada escena y contadores. Corrección de CI: la prueba E2E de /campo a 390 px esperaba una navegación que el cambio de rol interrumpía. Publicación: proyecto Vercel conectado a GitHub, protección estándar (producción pública), script y workflow de verificación del sitio publicado.
+
+VERIFICACIÓN REAL
+337/337 pruebas unitarias aprobadas, 20 archivos (19 en tests/cinematica-interactiva.test.ts: apertura, respiración, giro, realce, recorrido, anclas, reparto de rótulos, marcador, catálogo y store).
+Smoke portable del dominio compilado: 49/49 aprobadas.
+Prettier, ESLint (0 avisos), TypeScript de aplicación y E2E aprobados. Build de producción: 239 páginas; precache de 28 recursos.
+Playwright: 28/28 pruebas en Chromium aprobadas (nueva: el recorrido automático avanza de escena y se detiene al interactuar); 1 prueba GPU/WebGL omitida.
+Recorrido 3D con WebGL por software (SwiftShader, Chromium headless, 1440×900): modo 3D en calidad Alta; apertura activa al cargar y retirada después; en reposo el render queda en demand con latido ambiental (dos capturas separadas 0,7 s difieren); rótulos anclados visibles y pulsables (Cerro Lindo → panel con enlace /eventos?proyectos=%22CL%22), Escape cierra; el arrastre cambia el encuadre y soltar no fija ningún dato; el recorrido automático avanza de escena y se detiene con rueda, pulsación o navegación; sin errores de consola ni desborde horizontal. Móvil 390 px táctil: modo 3D Equilibrada, toque sobre la instalación o su rótulo abre el panel, sin desborde. 2D forzado: ambiente activo, revelado por escena y contador animado.
+
+LÍMITES
+Con GPU por software el monitor de rendimiento puede bajar la calidad hasta 2D en segundos; la prueba en GPU física sigue pendiente y no se acredita rendimiento real. Con prefers-reduced-motion no hay apertura, latido, recorrido ni revelados. Los rótulos y marcadores 3D son ilustrativos: las cifras, períodos y fuentes permanecen en el HTML.
