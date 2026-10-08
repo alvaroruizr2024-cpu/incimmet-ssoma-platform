@@ -1,0 +1,19 @@
+{
+  "type": "image/jpeg",
+  "width": 1600,
+  "height": 1200,
+  "bytes": 18113,
+  "filename": "foto-bcdefghibcdebcdebcdebcdefghijabc.jpg",
+  "privacy": {
+    "bloqueos": [],
+    "advertencias": []
+  },
+  "rejectedInvalids": [
+    true,
+    true,
+    true
+  ],
+  "fallbackType": "image/jpeg",
+  "scope": "Funciones fotos.ts y privacidad.ts transpiladas y ejecutadas en Chromium nativo. UUID sustituido por valor determinista; sin React, Next, service worker ni PWA integrada.",
+  "browser": "144.0.7559.96"
+}

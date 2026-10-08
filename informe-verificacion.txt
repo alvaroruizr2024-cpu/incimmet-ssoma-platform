@@ -1,0 +1,51 @@
+INCIMMET — REDISEÑO Y VERIFICACIÓN
+Fecha: 07/10/2026 (America/Lima)
+
+Cambios: navegación institucional marino/azul con iconos; indicadores antes del análisis narrativo; superficies, tarjetas, estados y tablas legibles; variantes clara y oscura; adaptación móvil. El lema usa azul institucional #0070C0 para cumplir contraste AA.
+
+VERIFICACIÓN REAL
+318/318 pruebas unitarias aprobadas, 19 archivos.
+27/27 pruebas ejecutadas en Chromium aprobadas; 1 prueba GPU/WebGL omitida.
+Build de producción aprobado: 239 páginas generadas, 225 fichas documentales.
+TypeScript de aplicación y E2E aprobado; ESLint sin advertencias; formato verificado.
+Integridad original del JSON y lockfile comprobadas. Dependencias sin duplicados de React, Three y Playwright core.
+2 pruebas del generador PWA aprobadas. Precache de 28 recursos.
+Navegador: filtros restaurados, tablas de gráficos, CSV, PNG de lecciones, fichas, 404, rol persistente, reportes sin conexión, recarga y procesamiento idempotente. También se verificó que el reporte local abre su ficha después de sincronizar en la demo.
+Accesibilidad automatizada: narrativa 2D y paso del formulario sin violaciones axe WCAG AA. No equivale a una certificación integral de accesibilidad.
+Anchuras verificadas: 360, 390, 768 y 1440 px; sin desborde de página en módulos operativos. Se inspeccionaron capturas claras, móviles y oscuras; los gráficos se cargaron antes de capturar. Cero errores JavaScript en la captura.
+campo: 258792 bytes gzip iniciales; objetivo <307200; cumple: True
+dashboard: 239417 bytes gzip iniciales; objetivo <307200; cumple: True
+
+PUBLICACIÓN PENDIENTE
+Se registró un sitio privado, pero no hay despliegue exitoso ni URL publicada. La revisión automática rechazó el envío por stdin requerido para sincronizar el código fuente con el alojamiento. La categoría sandbox_approval está deshabilitada en esta sesión. No se persistieron ni incluyeron tokens en el paquete.
+
+LÍMITES
+La prueba de WebGL con GPU queda pendiente. No se acredita funcionamiento al 100% en todos los dispositivos ni verificación del sitio publicado.
+La aplicación sigue siendo una demo: roles simulados y almacenamiento local; sin backend ni envío real a SSOMA. Los datos originales y las advertencias de evidencia parcial se conservan.
+El alojamiento estático debe aplicar out/_headers y rutas HTML limpias. Cámara, micrófono y PWA dependen de HTTPS, permisos y soporte del navegador. La preparación inicial offline usa el CDN de Workbox.
+
+CONTENIDO Y USO
+incimmet-ssoma-mejorado.zip incluye código fuente, lockfile y build out. Extraiga el ZIP y desde incimmet-ssoma-platform ejecute:
+node scripts/serve-export.mjs --port 3100
+Abra http://127.0.0.1:3100/dashboard.
+Para reconstruir: npm ci; npm run build.
+Los informes de pasos previos en docs son históricos; README.md e informe-verificacion.txt describen esta entrega.
+
+================================================================
+CINEMÁTICA INTERACTIVA — 08/10/2026 (America/Lima)
+
+Cambios sobre la presentación 3D (ruta /), sin dependencias nuevas: óptica de cámara por progreso (57° en pausas, 64° en avance, 68° en la salida) con balanceo acotado; mirada libre con puntero fino; velocidad narrativa aplicada a polvo y niebla; instalaciones de datos que se ensamblan por presencia; un hotspot por dato (señalar realza, clic fija) con rótulo al puntero y panel «Dato fijado» recorrible con teclado y enlazado a fichas y filtros de la plataforma; botón «Explorar los datos 3D de esta escena»; acento lumínico y tinte de viñeta por escena; coreografía de lectura y riel de progreso guiados por scroll (solo 3D, desde 901 px). Corrección: las instancias de datos (constelación y muro) se renderizaban en negro por declarar vertexColors sin atributo de color; ahora se ve el color por grupo y las tres tarjetas con cierre verificado. Detalle en docs/CINEMATICA_INTERACTIVA.md.
+
+VERIFICACIÓN REAL
+329/329 pruebas unitarias aprobadas, 20 archivos (11 nuevas en tests/cinematica-interactiva.test.ts).
+Smoke portable del dominio compilado: 45/45 aprobadas.
+Prettier, ESLint (0 avisos), TypeScript de aplicación y E2E aprobados. Build de producción: 239 páginas; precache de 28 recursos; campo 258821 y dashboard 239449 bytes gzip iniciales (objetivo < 307200).
+Playwright: 27/27 pruebas en Chromium aprobadas; 1 prueba GPU/WebGL omitida, como en la entrega anterior.
+Recorrido 3D con WebGL por software (SwiftShader, Chromium headless, 1440×900, pistas de 8 núcleos/8 GB): modo 3D en calidad Alta; exploración por teclado del panel (apertura, flechas, Escape devuelve el foco al botón); señalar con el puntero muestra rótulo y cursor de acción; clic fija el dato con su enlace exacto (/eventos/EV-…, /eventos?proyectos=%22CL%22); clic en vacío deselecciona; en reposo el render vuelve a demand; sin errores de consola ni desborde horizontal. En 390 px táctil: modo 3D, sin desborde y el canvas no captura el puntero.
+Constelación y muro comparados con la exportación anterior en la misma GPU por software: antes negros en ambas; ahora con color por instancia.
+
+LÍMITES
+La prueba en GPU física sigue pendiente. Con GPU por software el amortiguado de cámara se dilata y el monitor de rendimiento bajó la calidad a Equilibrada durante la sesión: comportamiento previsto, no medición de rendimiento real. Las animaciones guiadas por scroll requieren navegadores con animation-timeline; sin soporte el contenido es estático. El rótulo 3D es ilustrativo: cifras, períodos y fuentes permanecen en el HTML.
+
+CONTENIDO
+incimmet-ssoma-cinematica.zip incluye código fuente, lockfile y build out regenerado, sin node_modules ni credenciales. Misma ejecución: node scripts/serve-export.mjs --port 3100 y abrir http://127.0.0.1:3100/ para la presentación o /dashboard para la aplicación.

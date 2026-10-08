@@ -1,0 +1,6 @@
+
+> incimmet-ssoma-platform@0.4.0 test:analytics:portable
+> tsc -p tsconfig.domain.json && node scripts/analytics-smoke.cjs
+
+PASO 4 — 55/55 pruebas portables aprobadas; 0 fallos.
+Node v22.16.0; dominio, modelos y utilidades cliente compilados con TypeScript estricto. No equivale a Vitest, Next.js ni WebGL.

@@ -1,0 +1,59 @@
+{
+  "scope": "Calculated sRGB contrast for selected tokens only. Does not certify all screens or a WCAG audit.",
+  "pairs": [
+    {
+      "pair": "Texto campo claro",
+      "foreground": "#0F172A",
+      "background": "#FFFFFF",
+      "ratio": 17.853
+    },
+    {
+      "pair": "Secundario claro",
+      "foreground": "#475569",
+      "background": "#FFFFFF",
+      "ratio": 7.578
+    },
+    {
+      "pair": "Bot\u00f3n primario",
+      "foreground": "#FFFFFF",
+      "background": "#0070C0",
+      "ratio": 5.149
+    },
+    {
+      "pair": "Texto campo oscuro",
+      "foreground": "#FFFFFF",
+      "background": "#1E293B",
+      "ratio": 14.629
+    },
+    {
+      "pair": "Secundario oscuro",
+      "foreground": "#CBD5E1",
+      "background": "#1E293B",
+      "ratio": 9.853
+    },
+    {
+      "pair": "Borde campo claro",
+      "foreground": "#64748B",
+      "background": "#F8FAFC",
+      "ratio": 4.548
+    },
+    {
+      "pair": "Borde campo oscuro",
+      "foreground": "#94A3B8",
+      "background": "#0F172A",
+      "ratio": 6.963
+    },
+    {
+      "pair": "Foco oscuro cyan",
+      "foreground": "#00B0F0",
+      "background": "#1E293B",
+      "ratio": 5.899
+    },
+    {
+      "pair": "Comparaci\u00f3n: foco azul anterior, sustituido en oscuro",
+      "foreground": "#0070C0",
+      "background": "#1E293B",
+      "ratio": 2.841
+    }
+  ]
+}

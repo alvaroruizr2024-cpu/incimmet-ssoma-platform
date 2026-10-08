@@ -1,0 +1,5 @@
+
+> incimmet-ssoma-platform@0.4.0 test:final:portable
+> tsc -p tsconfig.pwa-domain.json && node scripts/final-smoke.cjs
+
+PASO 5 — 33/33 comprobaciones portables aprobadas. No incluye React, Workbox, IndexedDB ni Next.js.

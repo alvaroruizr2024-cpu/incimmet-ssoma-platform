@@ -1,0 +1,10 @@
+
+> incimmet-ssoma-platform@0.2.0 build
+> npm run lint && npm run typecheck && next build --webpack
+
+
+> incimmet-ssoma-platform@0.2.0 lint
+> eslint . --max-warnings=0
+
+sh: 1: eslint: not found
+Exit: 127

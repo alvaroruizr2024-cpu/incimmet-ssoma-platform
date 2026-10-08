@@ -1,0 +1,6 @@
+
+> incimmet-ssoma-platform@0.3.0 test:cinematica:portable
+> tsc -p tsconfig.domain.json && node scripts/cinematica-smoke.cjs
+
+PASO 3 — pruebas portables: 41/41 aprobadas; 0 fallos.
+Node v22.16.0. No incluye renderizado Next.js, React, WebGL, Vitest ni navegador.

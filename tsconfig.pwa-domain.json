@@ -1,0 +1,15 @@
+{
+  "extends": "./tsconfig.domain.json",
+  "include": [
+    "lib/types.ts",
+    "lib/config/demo.ts",
+    "lib/domain/**/*.ts",
+    "lib/data/validarDocumento.ts",
+    "lib/data/normalizar.ts",
+    "lib/pwa/types.ts",
+    "lib/pwa/formulario.ts",
+    "lib/pwa/fotos.ts",
+    "lib/pwa/voz.ts",
+    "lib/analytics/modelos.ts"
+  ]
+}

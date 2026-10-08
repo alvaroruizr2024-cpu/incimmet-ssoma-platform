@@ -1,0 +1,42 @@
+$ npm run typecheck:e2e
+
+> incimmet-ssoma-platform@0.4.0 typecheck:e2e
+> tsc --noEmit -p tsconfig.e2e.json
+
+playwright.config.ts(1,39): error TS2307: Cannot find module '@playwright/test' or its corresponding type declarations.
+playwright.config.ts(16,27): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+tests/e2e/final.spec.ts(1,30): error TS2307: Cannot find module '@playwright/test' or its corresponding type declarations.
+tests/e2e/final.spec.ts(2,24): error TS2307: Cannot find module '@axe-core/playwright' or its corresponding type declarations.
+tests/e2e/final.spec.ts(5,65): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/final.spec.ts(24,79): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/final.spec.ts(26,27): error TS7006: Parameter 'e' implicitly has an 'any' type.
+tests/e2e/final.spec.ts(33,71): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/final.spec.ts(49,69): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/final.spec.ts(49,75): error TS7031: Binding element 'context' implicitly has an 'any' type.
+tests/e2e/final.spec.ts(71,15): error TS2580: Cannot find name 'Buffer'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+tests/e2e/final.spec.ts(101,67): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/final.spec.ts(120,76): error TS7031: Binding element 'request' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(1,30): error TS2307: Cannot find module '@playwright/test' or its corresponding type declarations.
+tests/e2e/intro.spec.ts(2,24): error TS2307: Cannot find module '@axe-core/playwright' or its corresponding type declarations.
+tests/e2e/intro.spec.ts(6,65): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(8,27): error TS7006: Parameter 'error' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(25,64): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(33,83): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(39,66): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(39,74): error TS7006: Parameter 'info' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(49,66): error TS7031: Binding element 'browser' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(61,54): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(70,65): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(89,5): error TS2580: Cannot find name 'process'. Do you need to install type definitions for node? Try `npm i --save-dev @types/node`.
+tests/e2e/intro.spec.ts(92,79): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(92,87): error TS7006: Parameter 'info' implicitly has an 'any' type.
+tests/e2e/intro.spec.ts(113,28): error TS7006: Parameter 'element' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(1,30): error TS2307: Cannot find module '@playwright/test' or its corresponding type declarations.
+tests/e2e/paso4.spec.ts(5,74): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(26,80): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(42,66): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(42,72): error TS7031: Binding element 'request' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(51,52): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(66,66): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(81,54): error TS7031: Binding element 'page' implicitly has an 'any' type.
+tests/e2e/paso4.spec.ts(90,75): error TS7031: Binding element 'page' implicitly has an 'any' type.

@@ -1,0 +1,3 @@
+$ Prettier 3.9.9 --check .
+Checking formatting...
+All matched files use Prettier code style!

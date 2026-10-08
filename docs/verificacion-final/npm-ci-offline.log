@@ -1,0 +1,4 @@
+$ npm ci --offline --ignore-scripts --no-audit --no-fund --loglevel=error
+npm error code ENOTCACHED
+npm error request to https://registry.npmjs.org/zustand/-/zustand-5.0.8.tgz failed: cache mode is 'only-if-cached' but no cached response is available.
+npm error A complete log of this run can be found in: /home/oai/.npm/_logs/2026-10-07T20_23_09_809Z-debug-0.log

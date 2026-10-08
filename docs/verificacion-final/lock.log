@@ -1,0 +1,5 @@
+
+> incimmet-ssoma-platform@0.4.0 verify:lock
+> node scripts/verify-lock.mjs
+
+package-lock.json real compatible con las dependencias directas. SHA-256: 4de888f62b2759a58b3a8b8beeec301b244ae945294387bc3016f3868698533c

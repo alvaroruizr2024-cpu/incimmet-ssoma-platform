@@ -1,0 +1,506 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@layer base {
+  :root {
+    --background: #f8fafc;
+    --foreground: #0f172a;
+    --card: #ffffff;
+    --muted: #e7e6e6;
+    --border: #cbd5e1;
+    --primary: #0070c0;
+    --secondary-text: #475569;
+  }
+  .dark {
+    --background: #0f172a;
+    --foreground: #ffffff;
+    --card: #1e293b;
+    --muted: #334155;
+    --border: #64748b;
+    --primary: #0070c0;
+    --secondary-text: #cbd5e1;
+  }
+  body {
+    @apply m-0 bg-background font-sans text-base text-foreground antialiased;
+  }
+  h1 {
+    @apply text-3xl font-bold leading-tight tracking-tight sm:text-4xl;
+  }
+  label.grid {
+    grid-template-columns: minmax(0, 1fr);
+    min-width: 0;
+    max-width: 100%;
+  }
+  select {
+    text-overflow: ellipsis;
+    @apply w-full min-w-0 min-h-12 max-w-full rounded-md border border-border bg-background px-3 py-2 text-sm text-foreground;
+  }
+  a,
+  button,
+  select,
+  input,
+  textarea,
+  summary,
+  [tabindex] {
+    @apply focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-brand-blue;
+  }
+  table {
+    @apply w-full border-collapse text-left text-sm;
+  }
+  thead {
+    @apply sticky top-0 bg-muted;
+  }
+  th {
+    @apply p-3 text-xs font-semibold;
+  }
+  td {
+    @apply border-t border-border p-3 align-top;
+  }
+}
+@layer components {
+  .text-secondary {
+    color: var(--secondary-text);
+  }
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:bg-card focus:p-4;
+  }
+  .status-badge {
+    @apply inline-block rounded-md border px-2 py-1 text-xs font-semibold;
+  }
+  .status-badge[data-estado='Cerrada con evidencia'] {
+    background: #00b050;
+    color: #0f172a;
+    border-color: #007638;
+  }
+  .status-badge[data-estado='Declarada cerrada sin evidencia'] {
+    background: #ffc000;
+    color: #0f172a;
+    border-color: #8a6500;
+  }
+  .status-badge[data-estado='Abierta'] {
+    background: #e0f2fe;
+    color: #002060;
+    border-color: #1d7dcc;
+  }
+  .status-badge[data-estado='Vencida'] {
+    background: #fff1f2;
+    color: #991b1b;
+    border-color: #e53935;
+  }
+  .status-badge[data-estado='Sin información'] {
+    background: #e7e6e6;
+    color: #0f172a;
+    border-color: #9e9e9e;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    scroll-behavior: auto !important;
+    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms !important;
+  }
+}
+
+/* Identidad compartida: placeholder tipográfico, no logotipo oficial. */
+.incimmet-wordmark {
+  display: inline-flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px 14px;
+  border-radius: 6px;
+  background: #ffffff;
+  color: #151f44;
+}
+.incimmet-wordmark-nombre {
+  font-family: Inter, system-ui, Arial, sans-serif;
+  font-size: 23px;
+  font-weight: 800;
+  letter-spacing: 0.12em;
+  line-height: 1.1;
+}
+.incimmet-wordmark-lema {
+  color: #0070c0;
+  font-weight: 600;
+  font-size: 12px;
+  line-height: 1.35;
+}
+.incimmet-wordmark[data-compacto] .incimmet-wordmark-nombre {
+  font-size: 19px;
+}
+
+@layer components {
+  .filter-chip {
+    @apply inline-flex max-w-full min-h-11 items-center gap-2 rounded-full border border-brand-accent bg-sky-50 px-3 py-2 text-xs text-slate-900;
+  }
+  .kanban-card {
+    @apply min-w-0 rounded-lg border border-border bg-card p-4;
+  }
+}
+@layer base {
+  :where(main, section, article, fieldset) {
+    min-width: 0;
+  }
+  :where(input, textarea, select) {
+    max-width: 100%;
+  }
+  input {
+    min-width: 0;
+  }
+  textarea {
+    @apply w-full rounded-md border border-border bg-background p-3 text-sm;
+  }
+  progress {
+    accent-color: #0070c0;
+  }
+}
+
+.control-pyramid {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.control-pyramid li {
+  width: calc(72% + var(--nivel) * 7%);
+  max-width: 100%;
+  border-radius: 6px;
+  border: 1px solid var(--border);
+  background: var(--muted);
+  padding: 14px;
+  font-size: 13px;
+  line-height: 1.55;
+}
+.control-pyramid li:first-child {
+  background: #002060;
+  color: #ffffff;
+}
+.control-pyramid h4 {
+  font-weight: 700;
+  margin-bottom: 6px;
+}
+@media (max-width: 480px) {
+  .control-pyramid li {
+    width: calc(88% + var(--nivel) * 3%);
+  }
+}
+
+.deadline[data-plazo='vencida'] {
+  border-color: #e53935;
+  background: #fef2f2;
+  color: #991b1b;
+}
+.deadline[data-plazo='hoy'],
+.deadline[data-plazo='proxima'] {
+  border-color: #ffc000;
+  background: #fffbeb;
+  color: #78350f;
+}
+.deadline[data-plazo='en_plazo'] {
+  border-color: #1d7dcc;
+}
+.status-badge {
+  white-space: normal;
+  overflow-wrap: anywhere;
+  line-height: 1.5;
+}
+
+/* Controles de campo: una columna desde 360px y objetivos táctiles de 56px. */
+.campo-root {
+  --campo-border: #64748b;
+  min-width: 0;
+  max-width: 100%;
+}
+.campo-root button {
+  min-height: 56px;
+}
+.dark .campo-root {
+  --campo-border: #94a3b8;
+}
+.campo-root button.border {
+  border-color: var(--campo-border);
+}
+.campo-form label {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  min-width: 0;
+}
+.campo-form label:has(input[type='checkbox']) {
+  display: flex;
+}
+.campo-form input:not([type='checkbox']):not([type='file']),
+.campo-form select,
+.campo-form textarea {
+  width: 100%;
+  min-width: 0;
+  min-height: 56px;
+  border: 2px solid var(--campo-border);
+  border-radius: 6px;
+  padding: 12px;
+  background: var(--background);
+  color: var(--foreground);
+  font-size: 16px;
+}
+.campo-form input[type='checkbox'] {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  accent-color: #0070c0;
+}
+.campo-form dd {
+  overflow-wrap: anywhere;
+}
+.campo-form dt {
+  font-weight: 600;
+}
+
+/* Foco de teclado contrastante sobre las superficies oscuras. */
+.dark :is(a, button, select, input, textarea, summary, [tabindex]):focus-visible {
+  outline-color: #00b0f0;
+}
+
+/* Dirección visual: control operacional minero, identidad INCIMMET. */
+:root {
+  --background: #f3f6fa;
+  --border: #dbe3ed;
+  --muted: #edf2f7;
+}
+.dark {
+  --background: #0d1529;
+  --card: #17233a;
+  --border: #3d4c66;
+  --muted: #25334a;
+}
+.portal-header {
+  border-top: 4px solid #1d7dcc;
+  box-shadow: 0 2px 12px #151f4406;
+}
+.portal-header .incimmet-wordmark {
+  padding-left: 0;
+}
+.portal-header label {
+  font-size: 0.875rem;
+}
+.portal-sidebar {
+  background: #151f44;
+  color: #fff;
+  border-color: #273458;
+}
+.portal-sidebar > p {
+  color: #b9c9e4;
+}
+.portal-sidebar nav a {
+  border: 1px solid transparent;
+  border-radius: 9px;
+  color: #d5e1f4;
+  justify-content: space-between;
+  transition: background 160ms;
+}
+.portal-sidebar nav a:hover {
+  background: #24355c;
+  color: #fff;
+}
+.portal-sidebar nav a[aria-current='page'] {
+  color: #fff;
+  background: #0070c0;
+  border-color: #2595e5;
+  box-shadow: 0 4px 16px #0002;
+}
+.portal-sidebar :is(a, button):focus-visible {
+  outline-color: #00b0f0;
+}
+.nav-label {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+}
+.nav-label svg {
+  flex-shrink: 0;
+}
+.sidebar-purpose {
+  margin-top: 36px;
+  padding: 22px 0;
+  border-top: 1px solid #ffffff26;
+}
+.sidebar-purpose svg {
+  color: #66c6ff;
+  margin-bottom: 14px;
+}
+.sidebar-purpose p {
+  font-weight: 600;
+  font-size: 0.875rem;
+  line-height: 1.5;
+}
+.sidebar-purpose span {
+  display: block;
+  margin-top: 8px;
+  color: #b9c9e4;
+  font-size: 0.875rem;
+  line-height: 1.7;
+}
+.portal-main {
+  padding-top: 28px;
+}
+.page-heading {
+  padding-top: 8px;
+  padding-bottom: 20px;
+  border-bottom: 1px solid var(--border);
+}
+.page-heading > p:first-child {
+  color: #0070c0;
+  font-size: 0.875rem;
+  letter-spacing: 0.12em;
+}
+.dark .page-heading > p:first-child {
+  color: #75caff;
+}
+.page-heading h1 {
+  font-weight: 700;
+  font-size: clamp(1.75rem, 3vw, 2.5rem);
+  color: #151f44;
+}
+.dark .page-heading h1 {
+  color: #fff;
+}
+.page-heading > p:last-child {
+  font-size: 1rem;
+  line-height: 1.65;
+}
+.executive-brief {
+  background: #151f44;
+  color: #fff;
+  border: 0;
+  padding: 24px;
+  border-radius: 14px;
+  position: relative;
+  overflow: hidden;
+}
+.executive-brief::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 4px;
+  background: #00b0f0;
+}
+.executive-brief h2 {
+  color: #8ed8ff;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  font-size: 0.875rem;
+}
+.executive-brief p {
+  line-height: 1.7;
+  font-size: 0.875rem;
+}
+.workflow-links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 24px;
+}
+.workflow-links a {
+  display: inline-flex;
+  align-items: center;
+  min-height: 48px;
+  padding: 10px 16px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  text-decoration: none;
+  font-size: 0.875rem;
+}
+.workflow-links a:hover {
+  border-color: #0070c0;
+}
+.kpi-card {
+  position: relative;
+  border-radius: 12px;
+  border-top-width: 1px;
+  overflow: hidden;
+  box-shadow: 0 3px 14px #151f4405;
+}
+.kpi-card::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 4px;
+  height: 100%;
+  background: #0070c0;
+}
+.kpi-card[data-kpi='vencidas']::before {
+  background: #e53935;
+}
+.kpi-card[data-kpi='hpri']::before {
+  background: #00b0f0;
+}
+.kpi-card [data-testid] {
+  font-size: clamp(2rem, 3vw, 2.75rem);
+  letter-spacing: -0.045em;
+  color: #151f44;
+}
+.dark .kpi-card [data-testid] {
+  color: #fff;
+}
+.kpi-card > p:last-child {
+  font-size: 0.875rem;
+}
+[data-chart-panel] {
+  border-radius: 14px;
+  box-shadow: 0 3px 14px #151f4405;
+}
+.portal-main th {
+  font-size: 0.875rem;
+  padding: 16px 12px;
+  background: var(--muted);
+}
+.portal-main td {
+  padding: 16px 12px;
+}
+.portal-main tbody tr:hover {
+  background: var(--muted);
+}
+.portal-main select,
+.portal-main textarea {
+  font-size: 0.875rem;
+  border-radius: 8px;
+}
+.portal-main summary {
+  min-height: 44px;
+  line-height: 1.6;
+}
+.status-badge {
+  border-radius: 6px;
+  font-size: 0.875rem;
+}
+@media (min-width: 1024px) {
+  .portal-sidebar {
+    padding-top: 28px;
+  }
+  .portal-sidebar nav {
+    gap: 8px;
+  }
+}
+@media (max-width: 639px) {
+  .portal-main {
+    padding-top: 20px;
+  }
+  .executive-brief {
+    padding: 20px;
+  }
+  .workflow-links {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .workflow-links a {
+    justify-content: space-between;
+  }
+}

@@ -1,0 +1,5 @@
+{
+  "file": "app/(marketing)/presentacion.css",
+  "duplicateSelectorsPerContext": [],
+  "scope": "Static CSS parse; not visual/browser validation."
+}

@@ -1,0 +1,17 @@
+node_modules
+.next
+.verification
+coverage
+public/data/data.json
+docs/entradas
+docs/DISENO_FUNCIONAL_UX.md
+package-lock.json
+
+next-env.d.ts
+playwright-report
+test-results
+docs/verificacion
+
+public/precache-manifest.js
+docs/BUNDLE_FINAL.json
+docs/verificacion-final

@@ -1,0 +1,80 @@
+{
+  "node": "v22.16.0",
+  "npm": "10.9.2",
+  "timestamp": "2026-10-07T19:02:56.983581+00:00",
+  "typescript": "5.8.3 global (no instalación de dependencias)",
+  "commands": [
+    {
+      "name": "domain",
+      "command": "npm run test:domain:portable",
+      "exitCode": 0,
+      "log": "docs/verificacion/paso4/domain.log"
+    },
+    {
+      "name": "cinematica",
+      "command": "npm run test:cinematica:portable",
+      "exitCode": 0,
+      "log": "docs/verificacion/paso4/cinematica.log"
+    },
+    {
+      "name": "analytics",
+      "command": "npm run test:analytics:portable",
+      "exitCode": 0,
+      "log": "docs/verificacion/paso4/analytics.log"
+    },
+    {
+      "name": "data",
+      "command": "npm run verify:data",
+      "exitCode": 0,
+      "log": "docs/verificacion/paso4/data.log"
+    },
+    {
+      "name": "syntax",
+      "command": "npm run verify:syntax",
+      "exitCode": 0,
+      "log": "docs/verificacion/paso4/syntax.log"
+    },
+    {
+      "name": "lint",
+      "command": "npm run lint",
+      "exitCode": 127,
+      "log": "docs/verificacion/paso4/lint.log"
+    },
+    {
+      "name": "typecheck",
+      "command": "npm run typecheck",
+      "exitCode": 2,
+      "log": "docs/verificacion/paso4/typecheck.log"
+    },
+    {
+      "name": "typecheck-e2e",
+      "command": "npm run typecheck:e2e",
+      "exitCode": 2,
+      "log": "docs/verificacion/paso4/typecheck-e2e.log"
+    },
+    {
+      "name": "vitest",
+      "command": "npm test",
+      "exitCode": 127,
+      "log": "docs/verificacion/paso4/vitest.log"
+    },
+    {
+      "name": "build",
+      "command": "npm run build",
+      "exitCode": 127,
+      "log": "docs/verificacion/paso4/build.log"
+    },
+    {
+      "name": "deps",
+      "command": "npm run verify:deps",
+      "exitCode": 1,
+      "log": "docs/verificacion/paso4/deps.log"
+    },
+    {
+      "name": "audit",
+      "command": "npm audit --json",
+      "exitCode": 1,
+      "log": "docs/verificacion/paso4/audit.log"
+    }
+  ]
+}

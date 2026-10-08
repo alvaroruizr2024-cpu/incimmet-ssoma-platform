@@ -1,0 +1,5 @@
+
+> incimmet-ssoma-platform@0.4.0 test
+> vitest run
+
+sh: 1: vitest: not found

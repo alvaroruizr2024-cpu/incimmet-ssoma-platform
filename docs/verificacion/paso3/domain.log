@@ -1,0 +1,6 @@
+
+> incimmet-ssoma-platform@0.3.0 test:domain:portable
+> tsc -p tsconfig.domain.json && node scripts/domain-smoke.cjs
+
+Pruebas portables de dominio: 290/290 aprobadas; 0 fallos.
+Entorno: Node v22.16.0. No incluye Next.js, React, Vitest ni IndexedDB real.

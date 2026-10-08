@@ -1,0 +1,23 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "lib": ["ES2022", "DOM"],
+    "module": "CommonJS",
+    "moduleResolution": "Node",
+    "strict": true,
+    "noUncheckedIndexedAccess": true,
+    "skipLibCheck": true,
+    "outDir": ".verification/domain",
+    "rootDir": ".",
+    "types": []
+  },
+  "include": [
+    "lib/types.ts",
+    "lib/domain/**/*.ts",
+    "lib/data/normalizar.ts",
+    "lib/data/validarDocumento.ts",
+    "lib/config/demo.ts",
+    "lib/analytics/modelos.ts",
+    "lib/client/**/*.ts"
+  ]
+}

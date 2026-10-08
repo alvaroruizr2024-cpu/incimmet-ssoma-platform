@@ -1,0 +1,26 @@
+
+> incimmet-ssoma-platform@0.4.0 test:pwa-build
+> node --test scripts/pwa-build.test.mjs
+
+TAP version 13
+# Subtest: genera inventario con HTML y dependencias Flight, sin incluir todo el motor 3D
+ok 1 - genera inventario con HTML y dependencias Flight, sin incluir todo el motor 3D
+  ---
+  duration_ms: 52.443335
+  type: 'test'
+  ...
+# Subtest: falla ante una app shell ausente; no confirma falsamente preparación offline
+ok 2 - falla ante una app shell ausente; no confirma falsamente preparación offline
+  ---
+  duration_ms: 35.507623
+  type: 'test'
+  ...
+1..2
+# tests 2
+# suites 0
+# pass 2
+# fail 0
+# cancelled 0
+# skipped 0
+# todo 0
+# duration_ms 135.35671

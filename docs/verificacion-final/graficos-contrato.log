@@ -1,0 +1,11 @@
+
+> incimmet-ssoma-platform@0.4.0 test:charts-contract
+> tsc -p tsconfig.pwa-domain.json && node scripts/chart-options-contract.cjs
+
+OK Proyectos horizontales, nombres completos y filtro CL
+OK Conteos enteros y sin patrones por defecto
+OK Patrones opcionales
+OK Últimos 24 meses y sin slider visible móvil
+OK Leyenda plain y cobertura anotada
+OK Tasas oficiales sin redondeo del intervalo a entero
+6 contratos de opciones aprobados. No equivalen a una prueba visual ECharts.

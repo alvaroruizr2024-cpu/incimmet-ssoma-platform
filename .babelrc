@@ -1,0 +1,13 @@
+{
+  "presets": [
+    [
+      "next/babel",
+      {
+        "preset-env": {
+          "targets": { "chrome": "100" },
+          "exclude": ["transform-unicode-property-regex"]
+        }
+      }
+    ]
+  ]
+}

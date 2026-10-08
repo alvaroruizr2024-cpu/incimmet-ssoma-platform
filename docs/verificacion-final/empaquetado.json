@@ -1,0 +1,43 @@
+{
+  "created_utc": "2026-10-07T20:26:44.252365+00:00",
+  "archive_name": "incimmet-ssoma-platform.zip",
+  "files": 289,
+  "source_step4_files": 229,
+  "preserved_step4_paths": 229,
+  "new_paths": 60,
+  "missing_step4_paths": [],
+  "omitted_runtime_directories": [
+    ".git",
+    ".next",
+    ".verification",
+    "__pycache__",
+    "coverage",
+    "node_modules",
+    "playwright-report",
+    "test-results"
+  ],
+  "font_files": [],
+  "lock_unchanged": true,
+  "lock_sha256": "4de888f62b2759a58b3a8b8beeec301b244ae945294387bc3016f3868698533c",
+  "data_unchanged": true,
+  "data_sha256": "72883232b0934397c2fde8eaaaa04f262b93fa6457e3ad1c3b0aae9cb5181347",
+  "icons": {
+    "icon-192.png": [
+      192,
+      192
+    ],
+    "icon-512.png": [
+      512,
+      512
+    ],
+    "maskable-512.png": [
+      512,
+      512
+    ],
+    "apple-touch-icon.png": [
+      180,
+      180
+    ]
+  },
+  "note": "Source archive inventory, not proof of Next build or runtime acceptance. ZIP integrity checked after packaging."
+}

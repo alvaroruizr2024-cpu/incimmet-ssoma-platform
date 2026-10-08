@@ -1,0 +1,49 @@
+{
+  "at": "2026-10-07T20:23:17.871549+00:00",
+  "node": "v22.16.0",
+  "npm": "10.9.2",
+  "results": [
+    {
+      "command": "npm ci --offline --ignore-scripts --no-audit --no-fund --loglevel=error",
+      "exit_code": 1,
+      "timed_out": false,
+      "seconds": 0.72
+    },
+    {
+      "command": "npm run lint",
+      "exit_code": 127,
+      "timed_out": false,
+      "seconds": 0.09
+    },
+    {
+      "command": "npm run typecheck",
+      "exit_code": 2,
+      "timed_out": false,
+      "seconds": 1.0
+    },
+    {
+      "command": "npm run typecheck:e2e",
+      "exit_code": 2,
+      "timed_out": false,
+      "seconds": 0.56
+    },
+    {
+      "command": "npm test",
+      "exit_code": 127,
+      "timed_out": false,
+      "seconds": 0.08
+    },
+    {
+      "command": "npm run build",
+      "exit_code": 127,
+      "timed_out": false,
+      "seconds": 0.17
+    },
+    {
+      "command": "npm audit --omit=dev --fetch-retries=0 --fetch-timeout=5000",
+      "exit_code": 1,
+      "timed_out": false,
+      "seconds": 5.48
+    }
+  ]
+}

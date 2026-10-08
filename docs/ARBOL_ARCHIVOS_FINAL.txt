@@ -1,0 +1,346 @@
+incimmet-ssoma-platform/
+├── .github/
+│   └── workflows/
+│       └── verify.yml
+├── app/
+│   ├── (marketing)/
+│   │   ├── page.tsx
+│   │   └── presentacion.css
+│   ├── acciones/
+│   │   └── page.tsx
+│   ├── analisis/
+│   │   └── page.tsx
+│   ├── campo/
+│   │   └── page.tsx
+│   ├── configuracion/
+│   │   └── catalogos/
+│   │       └── page.tsx
+│   ├── dashboard/
+│   │   └── page.tsx
+│   ├── eventos/
+│   │   ├── [id]/
+│   │   │   └── page.tsx
+│   │   ├── local/
+│   │   │   └── [id]/
+│   │   │       └── page.tsx
+│   │   └── page.tsx
+│   ├── lecciones/
+│   │   └── page.tsx
+│   ├── privacidad/
+│   │   └── page.tsx
+│   ├── error.tsx
+│   ├── favicon.ico
+│   ├── globals.css
+│   ├── icon.svg
+│   ├── layout.tsx
+│   └── not-found.tsx
+├── components/
+│   ├── actions/
+│   │   └── evidence-dialog.tsx
+│   ├── analytics/
+│   │   ├── indicadores-panel.tsx
+│   │   ├── kpis.tsx
+│   │   └── reproduccion-controls.tsx
+│   ├── brand/
+│   │   └── wordmark.tsx
+│   ├── campo/
+│   │   ├── formulario-campo.tsx
+│   │   └── pwa-controls.tsx
+│   ├── charts/
+│   │   ├── chart-card.tsx
+│   │   ├── echart-view.tsx
+│   │   └── README.md
+│   ├── events/
+│   │   └── source-chips.tsx
+│   ├── marketing/
+│   │   ├── animated-number.tsx
+│   │   ├── browser-state.ts
+│   │   ├── cinematic-experience.tsx
+│   │   ├── context-link.tsx
+│   │   ├── fallback-gallery.tsx
+│   │   ├── motion-context.tsx
+│   │   └── story.tsx
+│   ├── screens/
+│   │   ├── acciones.tsx
+│   │   ├── analisis.tsx
+│   │   ├── campo.tsx
+│   │   ├── catalogos.tsx
+│   │   ├── dashboard.tsx
+│   │   ├── evento-detalle.tsx
+│   │   ├── eventos.tsx
+│   │   ├── lecciones.tsx
+│   │   └── shared.tsx
+│   ├── shell/
+│   │   ├── app-shell.tsx
+│   │   ├── filtro-chips.tsx
+│   │   ├── filtros-panel.tsx
+│   │   ├── filtros-url-sync.tsx
+│   │   └── quality-notice.tsx
+│   ├── three/
+│   │   ├── atmosphere.tsx
+│   │   ├── camera-rig.tsx
+│   │   ├── data-moments.tsx
+│   │   ├── geometry.ts
+│   │   ├── high-bloom.tsx
+│   │   ├── instanced-support.tsx
+│   │   ├── mine-canvas.tsx
+│   │   ├── README.md
+│   │   └── tunnel-geometry.tsx
+│   ├── ui/
+│   │   ├── button.tsx
+│   │   ├── card.tsx
+│   │   ├── input.tsx
+│   │   ├── label.tsx
+│   │   └── tabs.tsx
+│   └── providers.tsx
+├── docs/
+│   ├── entradas/
+│   │   ├── BRIEF_CHATGPT.md
+│   │   ├── FIXES_PASO3.md
+│   │   ├── FIXES_PASO4.md
+│   │   ├── PROMPT_01.md
+│   │   ├── PROMPT_02.md
+│   │   ├── PROMPT_03.md
+│   │   ├── PROMPT_04.md
+│   │   └── PROMPT_05.md
+│   ├── verificacion/
+│   │   ├── paso3/
+│   │   │   ├── build.exit
+│   │   │   ├── build.log
+│   │   │   ├── cinematica.log
+│   │   │   ├── data.log
+│   │   │   ├── domain.log
+│   │   │   ├── imports.log
+│   │   │   ├── npm-install.exit
+│   │   │   ├── npm-install.log
+│   │   │   ├── playwright.exit
+│   │   │   ├── playwright.log
+│   │   │   ├── syntax.log
+│   │   │   ├── vitest.exit
+│   │   │   └── vitest.log
+│   │   ├── paso4/
+│   │   │   ├── aislado/
+│   │   │   │   ├── css-report.json
+│   │   │   │   ├── export-report.json
+│   │   │   │   ├── fixture-1280-indicadores.png
+│   │   │   │   ├── fixture-390-evidencia.png
+│   │   │   │   └── utilidad-real-LA-014.png
+│   │   │   ├── analytics.exit
+│   │   │   ├── analytics.log
+│   │   │   ├── audit.exit
+│   │   │   ├── audit.log
+│   │   │   ├── build.exit
+│   │   │   ├── build.log
+│   │   │   ├── cinematica.exit
+│   │   │   ├── cinematica.log
+│   │   │   ├── data.exit
+│   │   │   ├── data.log
+│   │   │   ├── deps.exit
+│   │   │   ├── deps.log
+│   │   │   ├── domain.exit
+│   │   │   ├── domain.log
+│   │   │   ├── format-check.log
+│   │   │   ├── format-write.log
+│   │   │   ├── imports.json
+│   │   │   ├── lint.exit
+│   │   │   ├── lint.log
+│   │   │   ├── npm-install.log
+│   │   │   ├── resultados.json
+│   │   │   ├── syntax.exit
+│   │   │   ├── syntax.log
+│   │   │   ├── typecheck-e2e.exit
+│   │   │   ├── typecheck-e2e.log
+│   │   │   ├── typecheck.exit
+│   │   │   ├── typecheck.log
+│   │   │   ├── vitest.exit
+│   │   │   └── vitest.log
+│   │   ├── build-intento.log
+│   │   ├── data-integrity.log
+│   │   ├── domain-smoke.log
+│   │   ├── domain-typecheck.log
+│   │   ├── npm-install.log
+│   │   ├── syntax.log
+│   │   └── vitest-intento.log
+│   ├── verificacion-final/
+│   │   ├── analitica.log
+│   │   ├── build-pwa-unit.log
+│   │   ├── cinematica.log
+│   │   ├── comandos-npm.json
+│   │   ├── compresion-chromium.json
+│   │   ├── contraste-tokens.json
+│   │   ├── css-selectores.json
+│   │   ├── datos.log
+│   │   ├── domain.log
+│   │   ├── empaquetado.json
+│   │   ├── formato.log
+│   │   ├── graficos-contrato.log
+│   │   ├── lock.log
+│   │   ├── npm-audit-prod.log
+│   │   ├── npm-build.log
+│   │   ├── npm-ci-offline.log
+│   │   ├── npm-lint.log
+│   │   ├── npm-test.log
+│   │   ├── npm-typecheck-e2e.log
+│   │   ├── npm-typecheck.log
+│   │   ├── pwa-portable.log
+│   │   └── syntax.log
+│   ├── ACEPTACION_FINAL.md
+│   ├── ARBOL_ARCHIVOS.txt
+│   ├── ARBOL_ARCHIVOS_FINAL.txt
+│   ├── ARBOL_PASO4.txt
+│   ├── ARQUITECTURA_PASO2.md
+│   ├── CAMBIOS_PASO3.md
+│   ├── CAMBIOS_PASO4.md
+│   ├── CODIGO_PASO3.md
+│   ├── CODIGO_PASO4.md
+│   ├── data-integrity.json
+│   ├── DEPENDENCIAS.md
+│   ├── DEPENDENCIAS_FINAL.md
+│   ├── DEPENDENCIAS_PASO3.md
+│   ├── DISENO_FUNCIONAL_UX.md
+│   ├── FIXES_PASO3_RESPUESTA.md
+│   ├── FIXES_PASO4_RESPUESTA.md
+│   ├── MANIFIESTO_FINAL.json
+│   ├── MANIFIESTO_PASO3.json
+│   ├── MANIFIESTO_PASO4.json
+│   ├── PRESENTACION_PASO3.md
+│   ├── SEGURIDAD_FINAL.md
+│   ├── VERIFICACION.md
+│   ├── VERIFICACION_FINAL.md
+│   ├── VERIFICACION_PASO3.md
+│   └── VERIFICACION_PASO4.md
+├── lib/
+│   ├── analytics/
+│   │   ├── echarts-options.ts
+│   │   └── modelos.ts
+│   ├── client/
+│   │   ├── descargas.ts
+│   │   └── ficha-difusion.ts
+│   ├── config/
+│   │   ├── demo.ts
+│   │   └── navegacion.ts
+│   ├── data/
+│   │   ├── DataSource.ts
+│   │   ├── documental.server.ts
+│   │   ├── index.ts
+│   │   ├── indexedDB.ts
+│   │   ├── normalizar.ts
+│   │   ├── presentacion.server.ts
+│   │   ├── StaticJsonDataSource.ts
+│   │   ├── SupabaseDataSource.ts
+│   │   └── validarDocumento.ts
+│   ├── domain/
+│   │   ├── agregaciones.ts
+│   │   ├── analitica.ts
+│   │   ├── cinematica.ts
+│   │   ├── estadoVerificado.ts
+│   │   ├── exportacion.ts
+│   │   ├── fechas.ts
+│   │   ├── filtros.ts
+│   │   ├── filtrosURL.ts
+│   │   ├── indicadores.ts
+│   │   ├── lecciones.ts
+│   │   ├── links.ts
+│   │   ├── momentos3d.ts
+│   │   ├── presentacion.ts
+│   │   ├── privacidad.ts
+│   │   ├── reportes.ts
+│   │   ├── reproduccion.ts
+│   │   ├── roca.ts
+│   │   ├── serializar.ts
+│   │   └── textoCanvas.ts
+│   ├── hooks/
+│   │   ├── use-base.ts
+│   │   └── use-mounted.ts
+│   ├── pwa/
+│   │   ├── cola.ts
+│   │   ├── formulario.ts
+│   │   ├── fotos.ts
+│   │   ├── types.ts
+│   │   └── voz.ts
+│   ├── types.ts
+│   └── utils.ts
+├── messages/
+│   └── es-PE.ts
+├── public/
+│   ├── data/
+│   │   └── data.json
+│   ├── icons/
+│   │   ├── apple-touch-icon.png
+│   │   ├── icon-192.png
+│   │   ├── icon-512.png
+│   │   └── maskable-512.png
+│   ├── intro/
+│   │   ├── galeria.webp
+│   │   └── salida.webp
+│   ├── manifest.webmanifest
+│   ├── offline.html
+│   ├── precache-manifest.js
+│   └── sw.js
+├── scripts/
+│   ├── analytics-smoke.cjs
+│   ├── build-pwa.mjs
+│   ├── chart-options-contract.cjs
+│   ├── cinematica-smoke.cjs
+│   ├── domain-smoke.cjs
+│   ├── final-smoke.cjs
+│   ├── pwa-build.test.mjs
+│   ├── syntax-check.cjs
+│   ├── verify-data.mjs
+│   ├── verify-dependencies.mjs
+│   └── verify-lock.mjs
+├── store/
+│   ├── filtros.ts
+│   └── sesion.ts
+├── supabase/
+│   ├── tests/
+│   │   └── rls_smoke.sql
+│   └── schema.sql
+├── tests/
+│   ├── e2e/
+│   │   ├── final.spec.ts
+│   │   ├── intro.spec.ts
+│   │   └── paso4.spec.ts
+│   ├── agregaciones.test.ts
+│   ├── analitica-paso4.test.ts
+│   ├── asignacion-paso4.test.ts
+│   ├── cinematica.test.ts
+│   ├── dataSource.test.ts
+│   ├── datos.test.ts
+│   ├── estadoVerificado.test.ts
+│   ├── exportacion-paso4.test.ts
+│   ├── fechas-url.test.ts
+│   ├── filtros.test.ts
+│   ├── fixtures.ts
+│   ├── graficos-final.test.ts
+│   ├── indicadores.test.ts
+│   ├── momentos3d-paso4.test.ts
+│   ├── presentacion.test.ts
+│   ├── pwa-final.test.ts
+│   ├── reportes.test.ts
+│   ├── reproduccion-paso4.test.ts
+│   ├── serializar.test.ts
+│   ├── setup.ts
+│   └── store.test.ts
+├── .env.example
+├── .gitignore
+├── .nvmrc
+├── .prettierignore
+├── .prettierrc.json
+├── components.json
+├── eslint.config.mjs
+├── next.config.ts
+├── package-lock.json
+├── package.json
+├── playwright.config.ts
+├── postcss.config.mjs
+├── README.md
+├── tailwind.config.ts
+├── THIRD_PARTY_NOTICES.md
+├── tsconfig.domain.json
+├── tsconfig.e2e.json
+├── tsconfig.json
+├── tsconfig.pwa-domain.json
+└── vitest.config.ts
+
+289 archivos. Árbol del ZIP, sin node_modules ni .next.

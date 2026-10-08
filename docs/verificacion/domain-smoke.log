@@ -1,0 +1,2 @@
+Pruebas portables de dominio: 290/290 aprobadas; 0 fallos.
+Entorno: Node v22.16.0. No incluye Next.js, React, Vitest ni IndexedDB real.

@@ -1,0 +1,245 @@
+{
+  "scope": "Fixture estática de los TSX reales con serializador JSX mínimo y CSS real de intro; no build React/Next/WebGL.",
+  "results": [
+    {
+      "scene": "inicio",
+      "overflow": false,
+      "contentHeight": 531,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "eventos",
+      "overflow": false,
+      "contentHeight": 560,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "proyectos",
+      "overflow": false,
+      "contentHeight": 591,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "indicadores",
+      "overflow": false,
+      "contentHeight": 511,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "potencial",
+      "overflow": false,
+      "contentHeight": 581,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "evidencia",
+      "overflow": false,
+      "contentHeight": 598,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "plataforma",
+      "overflow": false,
+      "contentHeight": 613,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "continuar",
+      "overflow": false,
+      "contentHeight": 505,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 1280,
+      "height": 800
+    },
+    {
+      "scene": "inicio",
+      "overflow": false,
+      "contentHeight": 487,
+      "sceneHeight": 844,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "eventos",
+      "overflow": false,
+      "contentHeight": 565,
+      "sceneHeight": 844,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "proyectos",
+      "overflow": false,
+      "contentHeight": 667,
+      "sceneHeight": 942,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "indicadores",
+      "overflow": false,
+      "contentHeight": 556,
+      "sceneHeight": 844,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "potencial",
+      "overflow": false,
+      "contentHeight": 565,
+      "sceneHeight": 844,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "evidencia",
+      "overflow": false,
+      "contentHeight": 644,
+      "sceneHeight": 919,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "plataforma",
+      "overflow": false,
+      "contentHeight": 794,
+      "sceneHeight": 1069,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "continuar",
+      "overflow": false,
+      "contentHeight": 537,
+      "sceneHeight": 844,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 390,
+      "height": 844
+    },
+    {
+      "scene": "inicio",
+      "overflow": false,
+      "contentHeight": 487,
+      "sceneHeight": 800,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    },
+    {
+      "scene": "eventos",
+      "overflow": false,
+      "contentHeight": 559,
+      "sceneHeight": 834,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    },
+    {
+      "scene": "proyectos",
+      "overflow": false,
+      "contentHeight": 667,
+      "sceneHeight": 942,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    },
+    {
+      "scene": "indicadores",
+      "overflow": false,
+      "contentHeight": 595,
+      "sceneHeight": 870,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    },
+    {
+      "scene": "potencial",
+      "overflow": false,
+      "contentHeight": 604,
+      "sceneHeight": 879,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    },
+    {
+      "scene": "evidencia",
+      "overflow": false,
+      "contentHeight": 660,
+      "sceneHeight": 935,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    },
+    {
+      "scene": "plataforma",
+      "overflow": false,
+      "contentHeight": 839,
+      "sceneHeight": 1114,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    },
+    {
+      "scene": "continuar",
+      "overflow": false,
+      "contentHeight": 557,
+      "sceneHeight": 832,
+      "navIntersects": false,
+      "overlappingNumbers": false,
+      "width": 360,
+      "height": 800
+    }
+  ]
+}

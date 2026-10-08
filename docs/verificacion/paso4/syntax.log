@@ -1,0 +1,6 @@
+
+> incimmet-ssoma-platform@0.4.0 verify:syntax
+> node scripts/syntax-check.cjs
+
+Revisión sintáctica TypeScript 5.8.3: 119 archivos TS/TSX; 0 errores de sintaxis.
+No comprueba tipos de dependencias externas, enlaces ni renderizado React/Next.

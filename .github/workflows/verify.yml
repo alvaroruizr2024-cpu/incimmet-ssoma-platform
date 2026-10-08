@@ -1,0 +1,41 @@
+name: Verificación final
+on:
+  workflow_dispatch:
+  push:
+  pull_request:
+permissions:
+  contents: read
+jobs:
+  quality:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: ['20.19.2', '22']
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+          cache: npm
+      - name: Instalar el lockfile real sin resolver otras versiones
+        run: npm ci
+      - name: Integridad, formato, lint, tipos, Vitest y build PWA
+        run: npm run verify:final
+      - name: Auditoría de producción
+        run: npm run audit:prod
+      - name: Inventario de riesgo de herramientas de desarrollo
+        continue-on-error: true
+        run: npm audit --json > audit-final.json
+      - run: npx playwright install --with-deps chromium
+      - run: npm run test:e2e
+      - name: Conservar informes de verificación
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: verificacion-final-node-${{ matrix.node }}
+          path: |
+            docs/BUNDLE_FINAL.json
+            audit-final.json
+            playwright-report/
+            test-results/

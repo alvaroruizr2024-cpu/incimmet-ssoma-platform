@@ -1,0 +1,41 @@
+{
+  "scope": "Utilidades reales compiladas de PNG/CSV en Chromium; no valida React, ECharts ni Next.js.",
+  "checks": [
+    {
+      "case": "LA-001",
+      "filename": "INCIMMET_LA-001_difusion.png",
+      "width": 1440,
+      "height": 2336,
+      "bytes": 380585,
+      "result": "PASS"
+    },
+    {
+      "case": "LA-014",
+      "filename": "INCIMMET_LA-014_difusion.png",
+      "width": 1440,
+      "height": 2252,
+      "bytes": 334078,
+      "result": "PASS"
+    },
+    {
+      "case": "LA-022",
+      "filename": "INCIMMET_LA-022_difusion.png",
+      "width": 1440,
+      "height": 2168,
+      "bytes": 348203,
+      "result": "PASS"
+    },
+    {
+      "case": "CSV formula injection / quotes / nulls",
+      "result": "PASS",
+      "filename": "Prueba-de-seguridad-CSV.csv"
+    },
+    {
+      "case": "PNG chart container (canvas fixture, not ECharts)",
+      "result": "PASS",
+      "width": 1100,
+      "height": 510
+    }
+  ],
+  "pageerrors": []
+}

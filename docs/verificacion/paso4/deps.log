@@ -1,0 +1,56 @@
+
+> incimmet-ssoma-platform@0.4.0 verify:deps
+> node scripts/verify-dependencies.mjs
+
+No se pudo verificar npm ls --all --json. Ejecute npm install y revise el árbol.
+npm error code ELSPROBLEMS
+npm error missing: @axe-core/playwright@4.10.2, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @playwright/test@1.56.1, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @radix-ui/react-dialog@1.1.15, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @radix-ui/react-label@2.1.7, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @radix-ui/react-slot@1.2.3, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @react-three/drei@10.0.7, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @react-three/fiber@9.4.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @tanstack/react-query@5.90.5, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @tanstack/react-table@8.21.3, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @types/node@20.19.9, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @types/react-dom@19.2.2, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @types/react@19.2.2, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @types/three@0.175.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: @vitest/coverage-v8@4.1.11, required by incimmet-ssoma-platform@0.4.0
+npm error missing: autoprefixer@10.4.21, required by incimmet-ssoma-platform@0.4.0
+npm error missing: class-variance-authority@0.7.1, required by incimmet-ssoma-platform@0.4.0
+npm error missing: clsx@2.1.1, required by incimmet-ssoma-platform@0.4.0
+npm error missing: echarts@6.1.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: eslint-config-next@16.4.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: eslint-config-prettier@10.1.8, required by incimmet-ssoma-platform@0.4.0
+npm error missing: eslint@9.39.1, required by incimmet-ssoma-platform@0.4.0
+npm error missing: fake-indexeddb@6.2.4, required by incimmet-ssoma-platform@0.4.0
+npm error missing: fuse.js@7.1.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: gsap@3.13.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: idb@8.0.3, required by incimmet-ssoma-platform@0.4.0
+npm error missing: lucide-react@0.468.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: next-themes@0.4.6, required by incimmet-ssoma-platform@0.4.0
+npm error missing: next@16.4.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: playwright-core@1.56.1, required by incimmet-ssoma-platform@0.4.0
+npm error missing: postcss@8.5.29, required by incimmet-ssoma-platform@0.4.0
+npm error missing: react-dom@19.2.4, required by incimmet-ssoma-platform@0.4.0
+npm error missing: react@19.2.4, required by incimmet-ssoma-platform@0.4.0
+npm error missing: server-only@0.0.1, required by incimmet-ssoma-platform@0.4.0
+npm error missing: tailwind-merge@2.6.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: tailwindcss-animate@1.0.7, required by incimmet-ssoma-platform@0.4.0
+npm error missing: tailwindcss@3.4.17, required by incimmet-ssoma-platform@0.4.0
+npm error missing: three@0.175.0, required by incimmet-ssoma-platform@0.4.0
+npm error missing: typescript@5.9.3, required by incimmet-ssoma-platform@0.4.0
+npm error missing: vite@6.4.4, required by incimmet-ssoma-platform@0.4.0
+npm error missing: vitest@4.1.11, required by incimmet-ssoma-platform@0.4.0
+npm error missing: zustand@5.0.8, required by incimmet-ssoma-platform@0.4.0
+npm error A complete log of this run can be found in: /home/oai/.npm/_logs/2026-10-07T19_02_55_827Z-debug-0.log
+
+No se pudo verificar npm ls react --all --json --long. Ejecute npm install y revise el árbol.
+
+No se pudo verificar npm ls three --all --json --long. Ejecute npm install y revise el árbol.
+
+No se pudo verificar npm ls playwright-core --all --json --long. Ejecute npm install y revise el árbol.
+
+Dependencias NO verificadas.
