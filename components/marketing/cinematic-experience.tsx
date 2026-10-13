@@ -85,6 +85,7 @@ export function CinematicExperience({
   data: ResumenPresentacion;
 }) {
   const root = useRef<HTMLDivElement>(null);
+  const progresoRef = useRef<HTMLDivElement>(null);
   const reduced = useReducedMotion(),
     visible = usePageVisible();
   const [inView, setInView] = useState(true),
@@ -198,6 +199,31 @@ export function CinematicExperience({
   useEffect(() => {
     escenaActual.current = activeScene;
   }, [activeScene]);
+  // Cinta de progreso cinematográfica: avanza con el desplazamiento del relato, en todos los modos.
+  useEffect(() => {
+    const cinta = progresoRef.current;
+    if (!cinta) return;
+    let raf = 0;
+    const actualizar = () => {
+      const max = Math.max(
+        1,
+        (document.scrollingElement?.scrollHeight ?? 0) - window.innerHeight,
+      );
+      cinta.style.transform = `scaleX(${Math.min(1, Math.max(0, window.scrollY / max))})`;
+    };
+    const alDesplazar = () => {
+      cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(actualizar);
+    };
+    actualizar();
+    window.addEventListener('scroll', alDesplazar, { passive: true });
+    window.addEventListener('resize', alDesplazar);
+    return () => {
+      cancelAnimationFrame(raf);
+      window.removeEventListener('scroll', alDesplazar);
+      window.removeEventListener('resize', alDesplazar);
+    };
+  }, []);
   // Recorrido automático: desplaza el documento escena a escena; cualquier gesto del lector lo detiene.
   useEffect(() => {
     if (!recorrido || reduced) return;
@@ -310,6 +336,9 @@ export function CinematicExperience({
         data-scene={activeScene}
       >
         <div className="intro-apertura" aria-hidden="true" />
+        <div className="intro-progress" aria-hidden="true">
+          <div ref={progresoRef} className="intro-progress-fill" />
+        </div>
         <header className="intro-header">
           <Link prefetch={false} href="#inicio" aria-label="INCIMMET — inicio de la presentación">
             <Wordmark />
@@ -374,6 +403,7 @@ export function CinematicExperience({
             </SceneBoundary>
           )}
           <div className="intro-vignette" />
+          <div className="intro-grain" />
         </div>
         <main id="contenido" className="intro-main">
           <div id="cinematic-story">{children}</div>

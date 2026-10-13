@@ -39,7 +39,11 @@ const navIcons = {
 };
 export function AppShell({ children }: { children: ReactNode }) {
   const ruta = usePathname();
-  return ruta === '/' ? <>{children}</> : <OperationalShell>{children}</OperationalShell>;
+  return ruta === '/' || ruta === '/propuesta' ? (
+    <>{children}</>
+  ) : (
+    <OperationalShell>{children}</OperationalShell>
+  );
 }
 function OperationalShell({ children }: { children: ReactNode }) {
   const pathname = usePathname();
