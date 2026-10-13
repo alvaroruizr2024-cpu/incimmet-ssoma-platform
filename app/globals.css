@@ -504,3 +504,227 @@
     justify-content: space-between;
   }
 }
+
+/* ===== Banda de índices oficiales (estilo tableros EHS líderes) ===== */
+.rates-strip {
+  margin-bottom: 28px;
+  border-radius: 14px;
+  padding: 22px 24px;
+  position: relative;
+  overflow: hidden;
+  color: #fff;
+  background: linear-gradient(118deg, #0b1f3a 0%, #123a63 58%, #0e2c4c 100%);
+  box-shadow: 0 10px 34px rgba(7, 20, 39, 0.28);
+}
+.rates-strip::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    radial-gradient(60% 90% at 88% -10%, rgba(0, 176, 240, 0.28), transparent 60%),
+    radial-gradient(45% 70% at 4% 110%, rgba(255, 192, 0, 0.14), transparent 60%);
+}
+.rates-head {
+  position: relative;
+  z-index: 1;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 6px 16px;
+}
+.rates-head h2 {
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #8ed8ff;
+}
+.rates-head p {
+  font-size: 0.75rem;
+  color: #b9cbda;
+}
+.rates-grid {
+  position: relative;
+  z-index: 1;
+  margin-top: 16px;
+  display: grid;
+  gap: 14px;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+.rate-card {
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.16);
+  background: rgba(255, 255, 255, 0.06);
+  padding: 14px 18px 16px;
+  backdrop-filter: blur(4px);
+}
+.rate-card header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: #9fc7e8;
+}
+.rate-value {
+  margin-top: 8px;
+  font-size: clamp(1.9rem, 3.2vw, 2.6rem);
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.03em;
+  font-variant-numeric: tabular-nums;
+  text-shadow: 0 0 26px rgba(0, 176, 240, 0.35);
+}
+.rate-sigla {
+  margin-top: 6px;
+  font-size: 0.72rem;
+  color: #b9cbda;
+}
+.rates-note {
+  position: relative;
+  z-index: 1;
+  margin-top: 14px;
+  font-size: 0.75rem;
+  line-height: 1.6;
+  color: #b9cbda;
+}
+@media (max-width: 760px) {
+  .rates-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===== KPI agrupados: resultado vs gestión ===== */
+.kpi-groups {
+  display: grid;
+  gap: 22px;
+}
+.kpi-group-title {
+  margin: 0 0 12px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: #5b6b83;
+}
+.dark .kpi-group-title {
+  color: #9db4c6;
+}
+.kpi-head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.kpi-icon {
+  flex-shrink: 0;
+  color: #0070c0;
+}
+.dark .kpi-icon {
+  color: #62cdff;
+}
+.kpi-card[data-kpi='vencidas'] .kpi-icon {
+  color: #e53935;
+}
+.kpi-card[data-kpi='hpri'] .kpi-icon {
+  color: #00b0f0;
+}
+.kpi-card[data-kpi='cierre'] .kpi-icon {
+  color: #1e9e5a;
+}
+.kpi-meter {
+  margin-top: 14px;
+  height: 7px;
+  border-radius: 999px;
+  background: var(--muted);
+  overflow: hidden;
+}
+.kpi-meter > span {
+  display: block;
+  height: 100%;
+  border-radius: 999px;
+  background: linear-gradient(90deg, #0070c0, #00b0f0);
+  transition: width 0.6s ease;
+}
+.kpi-status {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 14px;
+  padding: 4px 12px;
+  border-radius: 999px;
+  font-size: 0.72rem;
+  font-weight: 600;
+}
+.kpi-status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: currentColor;
+}
+.kpi-status[data-tono='alerta'] {
+  background: #fdecea;
+  color: #b3261e;
+}
+.kpi-status[data-tono='ok'] {
+  background: #e6f6ec;
+  color: #1e7e34;
+}
+.dark .kpi-status[data-tono='alerta'] {
+  background: rgba(229, 57, 53, 0.18);
+  color: #ff8a80;
+}
+.dark .kpi-status[data-tono='ok'] {
+  background: rgba(0, 176, 80, 0.16);
+  color: #7ddf9f;
+}
+
+/* ===== Lectura ejecutiva con iconos ===== */
+.brief-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+.brief-item svg {
+  flex-shrink: 0;
+  margin-top: 1px;
+  color: #8ed8ff;
+}
+
+/* ===== Secciones del tablero ===== */
+.dash-section {
+  margin-top: 36px;
+}
+.dash-section-head {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 4px 18px;
+  margin-bottom: 16px;
+  padding-bottom: 10px;
+  border-bottom: 1px solid var(--border);
+}
+.dash-section-head h2 {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+  font-size: 1.02rem;
+  font-weight: 700;
+}
+.dash-section-head h2 svg {
+  color: #0070c0;
+}
+.dark .dash-section-head h2 svg {
+  color: #62cdff;
+}
+.dash-section-head p {
+  font-size: 0.8rem;
+  color: #5b6b83;
+}
+.dark .dash-section-head p {
+  color: #9db4c6;
+}
